@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentFirstBinding;
 
-public class FirstFragment extends Fragment {
+public class SensorsDashboardFragment extends Fragment {
 
     private FragmentFirstBinding binding;
 
@@ -29,13 +29,17 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
+        /*binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
+                NavHostFragment.findNavController(SensorsDashboardFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
-        });
+        });*/
+
+        SwipeCardAdapter swipeCardAdapter = new SwipeCardAdapter(this);
+
+        binding.swipeCardViewPager.setAdapter(swipeCardAdapter);
     }
 
     @Override
