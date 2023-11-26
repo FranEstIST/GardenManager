@@ -10,6 +10,12 @@
     <color name="original_plant_green">#40B354</color>
     <color name="vibrant_plant_green">#2FB635</color>
     <color name="grass_green">#104726</color>
+    <color name="light_blue">#4BA2E4</color>
+
+    <color name="temperature_red">#E96856</color>
+    <color name="light_gray">#F2F2F2</color>
+    <color name="humidity_blue">#BDEBFF</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

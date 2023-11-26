@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".SensorsDashboardFragment">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/swipeCardViewPager"
-        android:layout_width="121dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/sensorsButton"
         style="@style/Widget.AppCompat.Button.Borderless"
@@ -26,7 +17,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swipeCardViewPager"
+        app:layout_constraintTop_toBottomOf="@+id/framedSwipeCardThree"
         app:strokeColor="#00FFFFFF" />
 
     <Button
@@ -34,10 +25,62 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
         android:text="@string/actuators"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.412"
         app:layout_constraintStart_toEndOf="@+id/sensorsButton"
-        app:layout_constraintTop_toBottomOf="@+id/swipeCardViewPager" />
+        app:layout_constraintTop_toBottomOf="@+id/framedSwipeCardThree" />
+
+    <!--<androidx.cardview.widget.CardView
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        app:cardBackgroundColor="@color/pastel_green"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/swipeCardViewPager"
+            android:layout_width="121dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </androidx.cardview.widget.CardView>-->
+
+    <include
+        android:id="@+id/framedSwipeCardOne"
+        layout="@layout/framed_swipe_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></include>
+
+    <include
+        android:id="@+id/framedSwipeCardTwo"
+        layout="@layout/framed_swipe_card"
+        android:layout_width="@dimen/swipeCardWidth"
+        android:layout_height="@dimen/swipeCardHeight"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/framedSwipeCardOne"></include>
+
+    <include
+        android:id="@+id/framedSwipeCardThree"
+        layout="@layout/framed_swipe_card"
+        android:layout_width="@dimen/swipeCardWidth"
+        android:layout_height="@dimen/swipeCardHeight"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/framedSwipeCardTwo"></include>
 </androidx.constraintlayout.widget.ConstraintLayout>

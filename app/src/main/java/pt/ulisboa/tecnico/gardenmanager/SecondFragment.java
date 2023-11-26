@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentSecondBinding;
 
@@ -36,6 +37,18 @@ public class SecondFragment extends Fragment {
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
+        binding.gardenListRecyclerView.setLayoutManager(layoutManager);
+
+        GardenListAdapter gardenListAdapter = new GardenListAdapter();
+        binding.gardenListRecyclerView.setAdapter(gardenListAdapter);
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+
+        if(mainActivity != null && mainActivity.binding != null) {
+            mainActivity.binding.appBarMain.appBarTitle.setText(R.string.my_gardens);
+        }
     }
 
     @Override

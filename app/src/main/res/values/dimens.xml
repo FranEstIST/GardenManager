@@ -1,3 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="swipeCardWidth">150dp</dimen>
+    <dimen name="swipeCardHeight">150dp</dimen>
+    <dimen name="swipeCardFrameHeight">250dp</dimen>
 </resources>

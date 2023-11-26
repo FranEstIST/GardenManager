@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.GardenManager" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/vibrant_plant_green</item>
+        <item name="colorPrimaryVariant">@color/light_gray</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -21,7 +21,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.GardenManager.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.GardenManager.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:colorBackgroundFloating">@color/white</item>
+        <item name="android:colorBackground">@color/white</item>
+    </style>
 
     <style name="Theme.GardenManager.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
