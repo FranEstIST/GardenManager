@@ -95,6 +95,7 @@ public class SensorsDashboardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        //binding.framedSwipeCardOne.swipeCardViewPager.setAdapter(null);
         binding = null;
     }
 
@@ -231,4 +232,5 @@ public class SensorsDashboardFragment extends Fragment {
                 .observeOn(Schedulers.newThread())
                 .subscribe(devicesWithReadings -> Log.d(TAG, devicesWithReadings + "")));*/
     }
+
 }

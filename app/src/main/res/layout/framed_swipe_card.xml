@@ -20,7 +20,8 @@
             android:id="@+id/swipeCardViewPager"
             android:layout_width="@dimen/swipeCardWidth"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:saveEnabled="false" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
