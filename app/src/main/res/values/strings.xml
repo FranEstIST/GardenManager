@@ -21,4 +21,6 @@
     <string name="my_gardens">My Gardens</string>
     <string name="no_gardens_available">No Gardens Available</string>
     <string name="add_new_garde">Add New Garden</string>
+
+    <string name="add_new_device">Add New Device</string>
 </resources>

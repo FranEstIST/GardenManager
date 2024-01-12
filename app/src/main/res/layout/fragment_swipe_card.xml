@@ -9,7 +9,17 @@
     <!-- TODO: Update blank fragment layout -->
 
     <include
+        android:id="@+id/regular_swipe_card"
         layout="@layout/swipe_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></include>
+
+    <include
+        android:id="@+id/add_new_device_swipe_card"
+        layout="@layout/add_new_device_swipe_card"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

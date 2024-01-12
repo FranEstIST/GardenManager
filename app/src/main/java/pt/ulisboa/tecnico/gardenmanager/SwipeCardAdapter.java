@@ -76,6 +76,8 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
         if(position == (this.getItemCount() - 1)) {
             // TODO: The last swipe card in the swipe card pager should show a button to
             // add a new device (i.e. a new swipe card) to this pager
+            SwipeCardFragment swipeCardFragment = SwipeCardFragment.newLastSwipeCardInstance(this.deviceType);
+            return swipeCardFragment;
         }
 
         //String deviceName = "" + (position + 1);
@@ -88,6 +90,7 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
         String value = "N/A";
 
         if(deviceWithReadings.readings.size() > 0) {
+            // Check if this device has any readings
             value = deviceWithReadings.readings.get(deviceWithReadings.readings.size() - 1).getValue() + "";
         }
 
@@ -118,7 +121,7 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return this.devicesWithReadings.size();
+        return this.devicesWithReadings.size() + 1;
     }
 
     public void setDevicesWithReadings(ArrayList<DeviceWithReadings> devicesWithReadings) {
