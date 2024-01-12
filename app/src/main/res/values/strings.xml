@@ -23,4 +23,9 @@
     <string name="add_new_garde">Add New Garden</string>
 
     <string name="add_new_device">Add New Device</string>
+    <string name="device_id">Device ID</string>
+    <string name="device_name">Device name</string>
+    <string name="latest_reading">Latest reading</string>
+    <string name="submit">Submit</string>
+
 </resources>

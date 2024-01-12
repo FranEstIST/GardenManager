@@ -16,8 +16,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.room.Room;
 
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
+import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set up the database
+        GardenDatabase gardenDatabase = Room
+                .databaseBuilder(this.getApplicationContext(), GardenDatabase.class, "garden_database.db")
+                .fallbackToDestructiveMigration()
+                .build();
+
+        GlobalClass globalClass = (GlobalClass) this.getApplicationContext();
+        globalClass.setGardenDatabase(gardenDatabase);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

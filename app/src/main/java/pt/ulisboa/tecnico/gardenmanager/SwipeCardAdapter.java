@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -96,19 +97,19 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
         switch(this.deviceType) {
             case TEMPERATURE_SENSOR:
-                deviceName = "TempSensor" + deviceName;
+                //deviceName = "TempSensor" + deviceName;
                 value = value + "ºC";
                 break;
             case LIGHT_SENSOR:
-                deviceName = "LightSensor" + deviceName;
+                //deviceName = "LightSensor" + deviceName;
                 value = value + "%";
                 break;
             case HUMIDITY_SENSOR:
-                deviceName = "HumSensor" + deviceName;
+                //deviceName = "HumSensor" + deviceName;
                 value = value + "%";
                 break;
             default:
-                deviceName = "Device " + deviceName;
+                //deviceName = "Device " + deviceName;
                 break;
         }
 
@@ -120,6 +121,24 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
     }
 
     @Override
+    public long getItemId(int position) {
+        if(position < (this.getItemCount() - 1)) {
+            return this.devicesWithReadings.get(position).device.getDeviceId();
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean containsItem(long itemId) {
+        return itemId == -1;
+        /*|| this.devicesWithReadings
+                .stream()
+                .map(deviceWithReadings -> deviceWithReadings.device.getDeviceId())
+                .anyMatch(deviceId -> deviceId == itemId);*/
+    }
+
+    @Override
     public int getItemCount() {
         return this.devicesWithReadings.size() + 1;
     }
@@ -127,5 +146,6 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
     public void setDevicesWithReadings(ArrayList<DeviceWithReadings> devicesWithReadings) {
         this.devicesWithReadings = devicesWithReadings;
         this.notifyDataSetChanged();
+        //this.notifyItemChanged(0);
     }
 }

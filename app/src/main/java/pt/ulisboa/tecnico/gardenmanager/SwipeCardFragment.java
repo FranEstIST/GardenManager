@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.gardenmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -84,6 +85,10 @@ public class SwipeCardFragment extends Fragment {
 
     private void createRegularSwipeCardView(View view) {
         View regularSwipeCardLayout = view.findViewById(R.id.regular_swipe_card);
+        regularSwipeCardLayout.setVisibility(View.VISIBLE);
+
+        View addNewDeviceSwipeCardLayout = view.findViewById(R.id.add_new_device_swipe_card);
+        addNewDeviceSwipeCardLayout.setVisibility(View.GONE);
 
         TextView deviceNameTextView = regularSwipeCardLayout.findViewById(R.id.deviceNameTextView);
         TextView valueTextView = regularSwipeCardLayout.findViewById(R.id.valueTextView);
@@ -154,6 +159,19 @@ public class SwipeCardFragment extends Fragment {
                 swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.humidity_blue));
                 break;
         }
+
+        addNewDeviceImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Steps:
+                //  1. Open an overlay where the user can input the device name (and at this point also the reading's value)
+                //  2. After the user submits the new device, save it to the db
+
+                Intent intent = new Intent(SwipeCardFragment.this.getActivity().getApplicationContext(), AddNewDevicePopUpActivity.class);
+                intent.putExtra("deviceType", SwipeCardFragment.this.deviceType.name());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

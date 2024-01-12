@@ -44,15 +44,16 @@ public class SensorsDashboardFragment extends Fragment {
     private GardenDatabase gardenDatabase;
     private GardenDashboardViewModel gardenDashboardViewModel;
 
+    private GlobalClass globalClass;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        this.gardenDatabase = Room
-                .databaseBuilder(this.getActivity().getApplicationContext(), GardenDatabase.class, "GardenDatabase")
-                .fallbackToDestructiveMigration()
-                .build();
+        this.globalClass = (GlobalClass) this.getActivity().getApplicationContext();
+
+        this.gardenDatabase = this.globalClass.getGardenDatabase();
 
         this.gardenDashboardViewModel = new ViewModelFactory(
                 gardenDatabase.gardenDao(),
@@ -125,7 +126,7 @@ public class SensorsDashboardFragment extends Fragment {
         }
     }
     
-    void setUpSwipeCards() {
+    /*void setUpSwipeCards() {
         SwipeCardAdapter swipeCardAdapterOne = new SwipeCardAdapter(this, DeviceType.TEMPERATURE_SENSOR);
         SwipeCardAdapter swipeCardAdapterTwo = new SwipeCardAdapter(this, DeviceType.LIGHT_SENSOR);
         SwipeCardAdapter swipeCardAdapterThree = new SwipeCardAdapter(this, DeviceType.HUMIDITY_SENSOR);
@@ -160,12 +161,14 @@ public class SensorsDashboardFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
                 .subscribe(devicesWithReadings -> Log.d(TAG, devicesWithReadings + "")));
-    }
+    }*/
 
     private void getDeviceWithReadingsByType(DeviceType deviceType) {
         this.gardenDashboardViewModel.getDevicesWithReadingsByType(deviceType).observe(getViewLifecycleOwner(), new Observer<List<DeviceWithReadings>>() {
             @Override
             public void onChanged(@Nullable List<DeviceWithReadings> deviceWithReadings) {
+                Log.d(TAG, "List of " + deviceType.name() + " devices has been updated");
+
                 SwipeCardAdapter swipeCardAdapter = swipeCardAdapterHashMap.get(deviceType);
                 if(swipeCardAdapter == null) {
                     Log.e(TAG, "Swipe card adapter is null");
