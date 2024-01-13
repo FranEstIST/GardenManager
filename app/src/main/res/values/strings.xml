@@ -10,6 +10,8 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <string name="select_a_garden_to_view_devices">Select a garden to view devices</string>
+
     <string name="sensors">Sensors</string>
     <string name="actuators">Actuators</string>
 

@@ -85,6 +85,12 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
 
                 Device newDevice = new Device(deviceIdInt, deviceName, finalDeviceType);
 
+                int currentGardenId = globalClass.getCurrentGardenId();
+
+                if(currentGardenId != -1) {
+                    newDevice.setParentGardenId(currentGardenId);
+                }
+
                 long readingLong;
 
                 try {

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
@@ -26,11 +27,13 @@ import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 //import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentFirstBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
+import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 
@@ -188,7 +191,74 @@ public class SensorsDashboardFragment extends Fragment {
                 }));*/
     }
 
+    private void getDeviceWithReadingsByGardenAndType(int parentGardenId, DeviceType deviceType) {
+        this.gardenDashboardViewModel.getDevicesWithReadingsByGardenAndType(parentGardenId, deviceType)
+                .observe(getViewLifecycleOwner(), new Observer<List<DeviceWithReadings>>() {
+            @Override
+            public void onChanged(@Nullable List<DeviceWithReadings> deviceWithReadings) {
+                Log.d(TAG, "List of " + deviceType.name() + " devices has been updated");
+
+                SwipeCardAdapter swipeCardAdapter = swipeCardAdapterHashMap.get(deviceType);
+                if(swipeCardAdapter == null) {
+                    Log.e(TAG, "Swipe card adapter is null");
+                } else {
+                    swipeCardAdapter.setDevicesWithReadings(new ArrayList<>(deviceWithReadings));
+                }
+            }
+        });
+
+        /*this.disposable.add(gardenDashboardViewModel.getDevicesWithReadingsByType(deviceType)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(devicesWithReadings -> {
+                    Log.d(TAG, devicesWithReadings + "");
+                    this.devicesWithReadings.addAll(devicesWithReadings);
+                }));*/
+    }
+
     void setUpSwipeCardsTwo() {
+        int currentGardenId = this.globalClass.getCurrentGardenId();
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+
+        if(mainActivity != null && mainActivity.binding != null) {
+            TextView appBarTitleTextView = mainActivity.binding.appBarMain.appBarTitle;
+
+            if(currentGardenId == -1) {
+                appBarTitleTextView.setText("");
+            } else {
+                globalClass.getGardenDatabase().gardenDao().findById(currentGardenId)
+                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new DisposableSingleObserver<Garden>() {
+                            @Override
+                            public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Garden garden) {
+                                appBarTitleTextView.setText(garden.getName());
+                            }
+
+                            @Override
+                            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
+            }
+
+            //mainActivity.binding.appBarMain.appBarTitle.setText("Alameda Garden 1");
+        }
+
+        if(currentGardenId == -1) {
+            binding.framedSwipeCardOne.getRoot().setVisibility(View.GONE);
+            binding.framedSwipeCardTwo.getRoot().setVisibility(View.GONE);
+            binding.framedSwipeCardThree.getRoot().setVisibility(View.GONE);
+
+            binding.sensorsButton.setVisibility(View.GONE);
+            binding.actuatorsButton.setVisibility(View.GONE);
+
+            binding.selectAGardenTextView.setVisibility(View.VISIBLE);
+
+            return;
+        }
+
         SwipeCardAdapter tempSwipeCardAdapter = new SwipeCardAdapter(this, DeviceType.TEMPERATURE_SENSOR);
         SwipeCardAdapter lightSwipeCardAdapter = new SwipeCardAdapter(this, DeviceType.LIGHT_SENSOR);
         SwipeCardAdapter humSwipeCardAdapter = new SwipeCardAdapter(this, DeviceType.HUMIDITY_SENSOR);
@@ -197,9 +267,13 @@ public class SensorsDashboardFragment extends Fragment {
         this.swipeCardAdapterHashMap.put(DeviceType.LIGHT_SENSOR, lightSwipeCardAdapter);
         this.swipeCardAdapterHashMap.put(DeviceType.HUMIDITY_SENSOR, humSwipeCardAdapter);
 
-        getDeviceWithReadingsByType(DeviceType.TEMPERATURE_SENSOR);
+        /*getDeviceWithReadingsByType(DeviceType.TEMPERATURE_SENSOR);
         getDeviceWithReadingsByType(DeviceType.LIGHT_SENSOR);
-        getDeviceWithReadingsByType(DeviceType.HUMIDITY_SENSOR);
+        getDeviceWithReadingsByType(DeviceType.HUMIDITY_SENSOR);*/
+
+        getDeviceWithReadingsByGardenAndType(currentGardenId, DeviceType.TEMPERATURE_SENSOR);
+        getDeviceWithReadingsByGardenAndType(currentGardenId, DeviceType.LIGHT_SENSOR);
+        getDeviceWithReadingsByGardenAndType(currentGardenId, DeviceType.HUMIDITY_SENSOR);
 
         binding.framedSwipeCardOne.swipeCardViewPager.setAdapter(tempSwipeCardAdapter);
         binding.framedSwipeCardTwo.swipeCardViewPager.setAdapter(lightSwipeCardAdapter);
@@ -213,12 +287,6 @@ public class SensorsDashboardFragment extends Fragment {
         //Typeface roboto = Typeface.createFromAsset(getResources().getAssets(), get)
         Typeface roboto = ResourcesCompat.getFont(getContext(), R.font.roboto_regular);
         actuatorsButton.setTypeface(roboto);
-
-        MainActivity mainActivity = (MainActivity) getActivity();
-
-        if(mainActivity != null && mainActivity.binding != null) {
-            mainActivity.binding.appBarMain.appBarTitle.setText("Alameda Garden 1");
-        }
 
         /*GardenDatabase gardenDatabase = GardenDatabase.getInstance(this.getContext());
         GardenDashboardViewModel gardenDashboardViewModel = new ViewModelFactory(

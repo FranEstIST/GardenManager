@@ -35,6 +35,10 @@ public interface DeviceDao {
     @Query("SELECT * FROM device WHERE deviceType = (:deviceType)")
     LiveData<List<DeviceWithReadings>> getDevicesWithReadingsByType(DeviceType deviceType);
 
+    @Transaction
+    @Query("SELECT * FROM device WHERE parentGardenId = (:parentGardenId) AND deviceType = (:deviceType)")
+    LiveData<List<DeviceWithReadings>> getDevicesWithReadingsByGardenAndType(int parentGardenId, DeviceType deviceType);
+
     @Insert
     Completable insertAll(Device... devices);
 

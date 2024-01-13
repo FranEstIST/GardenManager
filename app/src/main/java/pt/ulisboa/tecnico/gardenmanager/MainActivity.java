@@ -18,8 +18,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.room.Room;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.observers.DisposableSingleObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
+import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,8 +66,30 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        TextView appBarTitleTextView = binding.appBarMain.appBarTitle;
-        appBarTitleTextView.setText("Alameda Garden 1");
+        /*TextView appBarTitleTextView = binding.appBarMain.appBarTitle;
+
+        int currentGardenId = globalClass.getCurrentGardenId();
+
+        if(currentGardenId == -1) {
+            appBarTitleTextView.setText("No Garden Selected");
+        } else {
+            globalClass.getGardenDatabase().gardenDao().findById(currentGardenId)
+                    .observeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new DisposableSingleObserver<Garden>() {
+                        @Override
+                        public void onSuccess(@NonNull Garden garden) {
+                            appBarTitleTextView.setText(garden.getName());
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            e.printStackTrace();
+                        }
+                    });
+        }*/
+
+        // appBarTitleTextView.setText("Alameda Garden 1");
 
         /*ActionBar actionBar = getSupportActionBar();
         DrawerLayout drawerLayout = binding.getRoot();

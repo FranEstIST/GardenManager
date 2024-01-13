@@ -32,4 +32,8 @@ public class GardenDashboardViewModel extends ViewModel {
     public LiveData<List<DeviceWithReadings>> getDevicesWithReadingsByType(DeviceType deviceType) {
         return this.deviceDao.getDevicesWithReadingsByType(deviceType);
     }
+
+    public LiveData<List<DeviceWithReadings>> getDevicesWithReadingsByGardenAndType(int parentGardenId, DeviceType deviceType) {
+        return this.deviceDao.getDevicesWithReadingsByGardenAndType(parentGardenId, deviceType);
+    }
 }

@@ -26,6 +26,9 @@ public interface GardenDao {
     @Query("SELECT * FROM garden WHERE name LIKE :name LIMIT 1")
     Single<Garden> findByName(String name);
 
+    @Query("SELECT * FROM garden WHERE gardenId = (:gardenId)")
+    Single<Garden> findById(int gardenId);
+
     @Transaction
     @Query("SELECT * FROM garden")
     LiveData<List<GardenWithDevices>> getAllGardensWithDevices();
