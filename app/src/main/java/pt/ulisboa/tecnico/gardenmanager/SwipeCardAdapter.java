@@ -88,34 +88,43 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
         String deviceName = deviceWithReadings.device.getName();
 
-        String value = "N/A";
+        String valueString = "N/A";
+
+        long value = 0;
 
         if(deviceWithReadings.readings.size() > 0) {
             // Check if this device has any readings
-            value = deviceWithReadings.readings.get(deviceWithReadings.readings.size() - 1).getValue() + "";
+            value = deviceWithReadings.readings.get(deviceWithReadings.readings.size() - 1).getValue();
         }
 
         switch(this.deviceType) {
             case TEMPERATURE_SENSOR:
                 //deviceName = "TempSensor" + deviceName;
-                value = value + "ºC";
+                valueString = value + "ºC";
                 break;
             case LIGHT_SENSOR:
-                //deviceName = "LightSensor" + deviceName;
-                value = value + "%";
-                break;
             case HUMIDITY_SENSOR:
+            case LAMP:
+            case SPRINKLER:
                 //deviceName = "HumSensor" + deviceName;
-                value = value + "%";
+                valueString = value + "%";
+                break;
+            case MONITOR:
+                if(value == 0) {
+                    valueString = "OFF";
+                } else {
+                    valueString = "ON";
+                }
                 break;
             default:
                 //deviceName = "Device " + deviceName;
+                valueString = value + "";
                 break;
         }
 
         SwipeCardFragment swipeCardFragment = SwipeCardFragment.newInstance(this.deviceType
                 , deviceName
-                , value);
+                , valueString);
 
         return swipeCardFragment;
     }

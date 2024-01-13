@@ -15,6 +15,7 @@
     <color name="temperature_red">#E96856</color>
     <color name="light_gray">#F2F2F2</color>
     <color name="humidity_blue">#BDEBFF</color>
+    <color name="monitor_blue">#6E90AF</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

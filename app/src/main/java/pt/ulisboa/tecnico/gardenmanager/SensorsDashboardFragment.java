@@ -1,5 +1,8 @@
 package pt.ulisboa.tecnico.gardenmanager;
 
+import static pt.ulisboa.tecnico.gardenmanager.DeviceSwipeCardsFragment.ACTUATOR_MODE;
+import static pt.ulisboa.tecnico.gardenmanager.DeviceSwipeCardsFragment.SENSOR_MODE;
+
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,6 +52,8 @@ public class SensorsDashboardFragment extends Fragment {
     private GardenDatabase gardenDatabase;
     private GardenDashboardViewModel gardenDashboardViewModel;
 
+    private int mode;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +68,8 @@ public class SensorsDashboardFragment extends Fragment {
                 gardenDatabase.deviceDao(),
                 gardenDatabase.readingDao()
         ).create(GardenDashboardViewModel.class);
+
+        this.mode = SENSOR_MODE;
     }
 
     @Override
@@ -87,7 +94,7 @@ public class SensorsDashboardFragment extends Fragment {
             }
         });*/
 
-        setUpSwipeCardsTwo();
+        setUpDashboard();
     }
 
     @Override
@@ -105,118 +112,46 @@ public class SensorsDashboardFragment extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-
-        setUpSwipeCardsTwo();
+        setUpDashboard();
     }
-    
-    private void setUpSwipeCard(DeviceWithReadings deviceWithReadings) {
-        Device device = deviceWithReadings.device;
-        Reading mostRecentReading = deviceWithReadings.readings.get(deviceWithReadings.readings.size() - 1);
 
-        DeviceType deviceType = device.getDeviceType();
+    void moveToSensorsDashboard() {
+        Fragment deviceSwipeCardsFragment = new DeviceSwipeCardsFragment(SENSOR_MODE);
 
-        SwipeCardAdapter swipeCardAdapter = new SwipeCardAdapter(this, deviceType);
-
-        switch(deviceType) {
-            case TEMPERATURE_SENSOR:
-                binding.framedSwipeCardOne.swipeCardViewPager.setAdapter(swipeCardAdapter);
-                break;
-            case LIGHT_SENSOR:
-                binding.framedSwipeCardTwo.swipeCardViewPager.setAdapter(swipeCardAdapter);
-                break;
-            case HUMIDITY_SENSOR:
-                binding.framedSwipeCardThree.swipeCardViewPager.setAdapter(swipeCardAdapter);
-                break;
-        }
-    }
-    
-    /*void setUpSwipeCards() {
-        SwipeCardAdapter swipeCardAdapterOne = new SwipeCardAdapter(this, DeviceType.TEMPERATURE_SENSOR);
-        SwipeCardAdapter swipeCardAdapterTwo = new SwipeCardAdapter(this, DeviceType.LIGHT_SENSOR);
-        SwipeCardAdapter swipeCardAdapterThree = new SwipeCardAdapter(this, DeviceType.HUMIDITY_SENSOR);
-
-        binding.framedSwipeCardOne.swipeCardViewPager.setAdapter(swipeCardAdapterOne);
-        binding.framedSwipeCardTwo.swipeCardViewPager.setAdapter(swipeCardAdapterTwo);
-        binding.framedSwipeCardThree.swipeCardViewPager.setAdapter(swipeCardAdapterThree);
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.devicesSwipeCardsFragmentContainerView, deviceSwipeCardsFragment)
+                .commit();
 
         Button sensorsButton = binding.sensorsButton;
         Button actuatorsButton = binding.actuatorsButton;
 
-        //sensorsButton.setTypeface(Typeface.create("times new roman", Typeface.NORMAL));
+        Typeface roboto_bold = ResourcesCompat.getFont(getContext(), R.font.roboto_bold);
+        sensorsButton.setTypeface(roboto_bold);
 
-        //Typeface roboto = Typeface.createFromAsset(getResources().getAssets(), get)
-        Typeface roboto = ResourcesCompat.getFont(getContext(), R.font.roboto_regular);
-        actuatorsButton.setTypeface(roboto);
-
-        MainActivity mainActivity = (MainActivity) getActivity();
-
-        if(mainActivity != null && mainActivity.binding != null) {
-            mainActivity.binding.appBarMain.appBarTitle.setText("Alameda Garden 1");
-        }
-
-        GardenDatabase gardenDatabase = GardenDatabase.getInstance(this.getContext());
-        GardenDashboardViewModel gardenDashboardViewModel = new ViewModelFactory(
-                gardenDatabase.gardenDao(),
-                gardenDatabase.deviceDao(),
-                gardenDatabase.readingDao()
-        ).create(GardenDashboardViewModel.class);
-
-        this.disposable.add(gardenDashboardViewModel.getAllDevicesWithReadings()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(devicesWithReadings -> Log.d(TAG, devicesWithReadings + "")));
-    }*/
-
-    private void getDeviceWithReadingsByType(DeviceType deviceType) {
-        this.gardenDashboardViewModel.getDevicesWithReadingsByType(deviceType).observe(getViewLifecycleOwner(), new Observer<List<DeviceWithReadings>>() {
-            @Override
-            public void onChanged(@Nullable List<DeviceWithReadings> deviceWithReadings) {
-                Log.d(TAG, "List of " + deviceType.name() + " devices has been updated");
-
-                SwipeCardAdapter swipeCardAdapter = swipeCardAdapterHashMap.get(deviceType);
-                if(swipeCardAdapter == null) {
-                    Log.e(TAG, "Swipe card adapter is null");
-                } else {
-                  swipeCardAdapter.setDevicesWithReadings(new ArrayList<>(deviceWithReadings));
-                }
-            }
-        });
-
-        /*this.disposable.add(gardenDashboardViewModel.getDevicesWithReadingsByType(deviceType)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(devicesWithReadings -> {
-                    Log.d(TAG, devicesWithReadings + "");
-                    this.devicesWithReadings.addAll(devicesWithReadings);
-                }));*/
+        Typeface roboto_regular = ResourcesCompat.getFont(getContext(), R.font.roboto_regular);
+        actuatorsButton.setTypeface(roboto_regular);
     }
 
-    private void getDeviceWithReadingsByGardenAndType(int parentGardenId, DeviceType deviceType) {
-        this.gardenDashboardViewModel.getDevicesWithReadingsByGardenAndType(parentGardenId, deviceType)
-                .observe(getViewLifecycleOwner(), new Observer<List<DeviceWithReadings>>() {
-            @Override
-            public void onChanged(@Nullable List<DeviceWithReadings> deviceWithReadings) {
-                Log.d(TAG, "List of " + deviceType.name() + " devices has been updated");
+    void moveToActuatorsDashboard() {
+        Fragment deviceSwipeCardsFragment = new DeviceSwipeCardsFragment(ACTUATOR_MODE);
 
-                SwipeCardAdapter swipeCardAdapter = swipeCardAdapterHashMap.get(deviceType);
-                if(swipeCardAdapter == null) {
-                    Log.e(TAG, "Swipe card adapter is null");
-                } else {
-                    swipeCardAdapter.setDevicesWithReadings(new ArrayList<>(deviceWithReadings));
-                }
-            }
-        });
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.devicesSwipeCardsFragmentContainerView, deviceSwipeCardsFragment)
+                .commit();
 
-        /*this.disposable.add(gardenDashboardViewModel.getDevicesWithReadingsByType(deviceType)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(devicesWithReadings -> {
-                    Log.d(TAG, devicesWithReadings + "");
-                    this.devicesWithReadings.addAll(devicesWithReadings);
-                }));*/
+        Button sensorsButton = binding.sensorsButton;
+        Button actuatorsButton = binding.actuatorsButton;
+
+        Typeface roboto_bold = ResourcesCompat.getFont(getContext(), R.font.roboto_bold);
+        actuatorsButton.setTypeface(roboto_bold);
+
+        Typeface roboto_regular = ResourcesCompat.getFont(getContext(), R.font.roboto_regular);
+        sensorsButton.setTypeface(roboto_regular);
     }
 
-    void setUpSwipeCardsTwo() {
+    void setUpDashboard() {
         int currentGardenId = this.globalClass.getCurrentGardenId();
 
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -229,7 +164,7 @@ public class SensorsDashboardFragment extends Fragment {
             } else {
                 globalClass.getGardenDatabase().gardenDao().findById(currentGardenId)
                         .observeOn(Schedulers.newThread())
-                        .subscribeOn(Schedulers.io())
+                        //.subscribeOn(Schedulers.io())
                         .subscribe(new DisposableSingleObserver<Garden>() {
                             @Override
                             public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Garden garden) {
@@ -247,10 +182,6 @@ public class SensorsDashboardFragment extends Fragment {
         }
 
         if(currentGardenId == -1) {
-            binding.framedSwipeCardOne.getRoot().setVisibility(View.GONE);
-            binding.framedSwipeCardTwo.getRoot().setVisibility(View.GONE);
-            binding.framedSwipeCardThree.getRoot().setVisibility(View.GONE);
-
             binding.sensorsButton.setVisibility(View.GONE);
             binding.actuatorsButton.setVisibility(View.GONE);
 
@@ -259,46 +190,24 @@ public class SensorsDashboardFragment extends Fragment {
             return;
         }
 
-        SwipeCardAdapter tempSwipeCardAdapter = new SwipeCardAdapter(this, DeviceType.TEMPERATURE_SENSOR);
-        SwipeCardAdapter lightSwipeCardAdapter = new SwipeCardAdapter(this, DeviceType.LIGHT_SENSOR);
-        SwipeCardAdapter humSwipeCardAdapter = new SwipeCardAdapter(this, DeviceType.HUMIDITY_SENSOR);
-
-        this.swipeCardAdapterHashMap.put(DeviceType.TEMPERATURE_SENSOR, tempSwipeCardAdapter);
-        this.swipeCardAdapterHashMap.put(DeviceType.LIGHT_SENSOR, lightSwipeCardAdapter);
-        this.swipeCardAdapterHashMap.put(DeviceType.HUMIDITY_SENSOR, humSwipeCardAdapter);
-
-        /*getDeviceWithReadingsByType(DeviceType.TEMPERATURE_SENSOR);
-        getDeviceWithReadingsByType(DeviceType.LIGHT_SENSOR);
-        getDeviceWithReadingsByType(DeviceType.HUMIDITY_SENSOR);*/
-
-        getDeviceWithReadingsByGardenAndType(currentGardenId, DeviceType.TEMPERATURE_SENSOR);
-        getDeviceWithReadingsByGardenAndType(currentGardenId, DeviceType.LIGHT_SENSOR);
-        getDeviceWithReadingsByGardenAndType(currentGardenId, DeviceType.HUMIDITY_SENSOR);
-
-        binding.framedSwipeCardOne.swipeCardViewPager.setAdapter(tempSwipeCardAdapter);
-        binding.framedSwipeCardTwo.swipeCardViewPager.setAdapter(lightSwipeCardAdapter);
-        binding.framedSwipeCardThree.swipeCardViewPager.setAdapter(humSwipeCardAdapter);
+        moveToSensorsDashboard();
 
         Button sensorsButton = binding.sensorsButton;
         Button actuatorsButton = binding.actuatorsButton;
 
-        //sensorsButton.setTypeface(Typeface.create("times new roman", Typeface.NORMAL));
+        sensorsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToSensorsDashboard();
+            }
+        });
 
-        //Typeface roboto = Typeface.createFromAsset(getResources().getAssets(), get)
-        Typeface roboto = ResourcesCompat.getFont(getContext(), R.font.roboto_regular);
-        actuatorsButton.setTypeface(roboto);
-
-        /*GardenDatabase gardenDatabase = GardenDatabase.getInstance(this.getContext());
-        GardenDashboardViewModel gardenDashboardViewModel = new ViewModelFactory(
-                gardenDatabase.gardenDao(),
-                gardenDatabase.deviceDao(),
-                gardenDatabase.readingDao()
-        ).create(GardenDashboardViewModel.class);
-
-        this.disposable.add(gardenDashboardViewModel.getAllDevicesWithReadings()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(devicesWithReadings -> Log.d(TAG, devicesWithReadings + "")));*/
+        actuatorsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToActuatorsDashboard();
+            }
+        });
     }
 
 }

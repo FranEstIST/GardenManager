@@ -5,6 +5,6 @@ public enum DeviceType {
     LIGHT_SENSOR,
     HUMIDITY_SENSOR,
     MONITOR,
-    SPRINKLER,
-    LAMP
+    LAMP,
+    SPRINKLER
 }

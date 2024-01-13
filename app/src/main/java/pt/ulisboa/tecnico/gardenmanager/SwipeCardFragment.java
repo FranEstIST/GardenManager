@@ -119,6 +119,21 @@ public class SwipeCardFragment extends Fragment {
                 deviceIconImageView.setMaxWidth(20);
                 swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.humidity_blue));
                 break;
+            case MONITOR:
+                deviceIconImageView.setImageResource(R.drawable.led_television_white_icon);
+                deviceNameTextView.setTextColor(getResources().getColor(R.color.white));
+                valueTextView.setTextColor(getResources().getColor(R.color.white));
+                removeDeviceImageButton.setBackground(getResources().getDrawable(R.drawable.delete_button_white_small));
+                swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.humidity_blue));
+                break;
+            case LAMP:
+                deviceIconImageView.setImageResource(R.drawable.bulb_icon);
+                swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.light_gray));
+                break;
+            case SPRINKLER:
+                deviceIconImageView.setImageResource(R.drawable.watering_can_icon);
+                swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.monitor_blue));
+                break;
         }
         deviceNameTextView.setText(this.deviceName);
         valueTextView.setText(this.value);
@@ -157,6 +172,20 @@ public class SwipeCardFragment extends Fragment {
                 deviceIconImageView.setMaxHeight(20);
                 deviceIconImageView.setMaxWidth(20);
                 swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.humidity_blue));
+                break;
+            case MONITOR:
+                deviceIconImageView.setImageResource(R.drawable.led_television_white_icon);
+                addNewDeviceTextView.setTextColor(getResources().getColor(R.color.white));
+                addNewDeviceImageButton.setBackground(getResources().getDrawable(R.drawable.add_button_white_plain));
+                swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.humidity_blue));
+                break;
+            case LAMP:
+                deviceIconImageView.setImageResource(R.drawable.bulb_icon);
+                swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.light_gray));
+                break;
+            case SPRINKLER:
+                deviceIconImageView.setImageResource(R.drawable.watering_can_icon);
+                swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.monitor_blue));
                 break;
         }
 
