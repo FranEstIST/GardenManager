@@ -76,7 +76,7 @@ public class SecondFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         binding.gardenListRecyclerView.setLayoutManager(layoutManager);
 
-        GardenListAdapter gardenListAdapter = new GardenListAdapter();
+        GardenListAdapter gardenListAdapter = new GardenListAdapter(this.globalClass);
         binding.gardenListRecyclerView.setAdapter(gardenListAdapter);
 
         MainActivity mainActivity = (MainActivity) getActivity();

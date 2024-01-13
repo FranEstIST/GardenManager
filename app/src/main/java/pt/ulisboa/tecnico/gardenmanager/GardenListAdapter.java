@@ -1,9 +1,12 @@
 package pt.ulisboa.tecnico.gardenmanager;
 
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,15 +19,22 @@ import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 
 public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.GardenListItemViewHolder> {
+    public static final String TAG = "GardenListAdapter";
     private ArrayList<GardenWithDevices> gardensWithDevices;
+    private GlobalClass globalClass;
 
-    public GardenListAdapter(ArrayList<GardenWithDevices> gardensWithDevices) {
+    /*public GardenListAdapter(ArrayList<GardenWithDevices> gardensWithDevices) {
         this.gardensWithDevices = gardensWithDevices;
+    }*/
+
+    public GardenListAdapter(GlobalClass globalClass) {
+        this.gardensWithDevices = new ArrayList<>();
+        this.globalClass = globalClass;
     }
 
-    public GardenListAdapter() {
+    /*public GardenListAdapter() {
         this.gardensWithDevices = new ArrayList<>();
-    }
+    }*/
 
     @NonNull
     @Override
@@ -38,6 +48,14 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
         GardenWithDevices gardenWithDevices = this.gardensWithDevices.get(position);
 
         Garden garden = gardenWithDevices.garden;
+
+        int gardenId = garden.getGardenId();
+
+        if(gardenId == globalClass.getCurrentGardenId()) {
+            holder.gardenListItem.setBackgroundResource(R.drawable.garden_list_item_selected_bg);
+        } else {
+            holder.gardenListItem.setBackgroundResource(R.drawable.garden_list_item_bg);
+        }
 
         List<Device> devices = gardenWithDevices.devices;
 
@@ -59,17 +77,34 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
     }
 
     class GardenListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public View gardenListItem;
         public TextView gardenNameTextView;
         public TextView numberOfDevicesTextView;
 
         public GardenListItemViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.gardenListItem = itemView.findViewById(R.id.gardenListItem);
             this.gardenNameTextView = itemView.findViewById(R.id.gardenNameTextView);
             this.numberOfDevicesTextView = itemView.findViewById(R.id.numberOfDevicesTextView);
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            int clickedPosition = getAdapterPosition();
+            Garden selectedGarden = gardensWithDevices.get(clickedPosition).garden;
+            int selectedGardenId = selectedGarden.getGardenId();
+            globalClass.setCurrentGardenId(selectedGardenId);
+
+            Log.d(TAG, "Clicked garden at position: " + clickedPosition);
+
+            /*Toast.makeText(globalClass,
+                    "Clicked garden at position: " + clickedPosition,
+                    Toast.LENGTH_SHORT).show();*/
+
+            notifyDataSetChanged();
+
             // TODO: Navigate to the respective garden dashboard
             // getAdapterPosition() will come in handy
         }
