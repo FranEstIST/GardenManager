@@ -32,7 +32,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 //import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentFirstBinding;
+import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentGardenDashboardBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
@@ -40,9 +40,9 @@ import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 
-public class SensorsDashboardFragment extends Fragment {
+public class GardenDashboardFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentGardenDashboardBinding binding;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final String TAG = "SensorsDashboardFragment";
     private HashMap<DeviceType, SwipeCardAdapter> swipeCardAdapterHashMap = new HashMap<>();
@@ -78,7 +78,7 @@ public class SensorsDashboardFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentGardenDashboardBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }

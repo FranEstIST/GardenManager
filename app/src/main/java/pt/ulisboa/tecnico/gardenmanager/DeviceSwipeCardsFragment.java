@@ -26,7 +26,6 @@ import androidx.lifecycle.Observer;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentDeviceSwipeCardsBinding;
-import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentFirstBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;

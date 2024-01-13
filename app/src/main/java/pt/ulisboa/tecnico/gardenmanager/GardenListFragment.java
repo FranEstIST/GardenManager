@@ -11,20 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentSecondBinding;
+import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentGardenListBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
-import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 
-public class SecondFragment extends Fragment {
+public class GardenListFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentGardenListBinding binding;
     private final String TAG = "GardenListFragment";
 
     private GlobalClass globalClass;
@@ -53,7 +51,7 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentGardenListBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -67,7 +65,7 @@ public class SecondFragment extends Fragment {
                 /*NavHostFragment.findNavController(SecondFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);*/
 
-                Intent intent = new Intent(SecondFragment.this.getActivity().getApplicationContext(),
+                Intent intent = new Intent(GardenListFragment.this.getActivity().getApplicationContext(),
                         AddNewGardenPopUpActivity.class);
                 startActivity(intent);
             }
