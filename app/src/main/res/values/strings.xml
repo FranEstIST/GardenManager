@@ -28,4 +28,8 @@
     <string name="latest_reading">Latest reading</string>
     <string name="submit">Submit</string>
 
+    <string name="add_new_garden">Add New Garden</string>
+    <string name="garden_id">Garden ID</string>
+    <string name="garden_name">Garden name</string>
+
 </resources>

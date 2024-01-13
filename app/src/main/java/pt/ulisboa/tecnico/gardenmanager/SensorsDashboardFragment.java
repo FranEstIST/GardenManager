@@ -41,10 +41,10 @@ public class SensorsDashboardFragment extends Fragment {
     private final String TAG = "SensorsDashboardFragment";
     private HashMap<DeviceType, SwipeCardAdapter> swipeCardAdapterHashMap = new HashMap<>();
 
+    private GlobalClass globalClass;
+
     private GardenDatabase gardenDatabase;
     private GardenDashboardViewModel gardenDashboardViewModel;
-
-    private GlobalClass globalClass;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

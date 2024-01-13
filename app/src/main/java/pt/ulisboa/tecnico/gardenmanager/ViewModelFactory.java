@@ -25,6 +25,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(GardenDashboardViewModel.class)) {
             return (T) new GardenDashboardViewModel(this.gardenDao, this.deviceDao);
+        } else if (modelClass.isAssignableFrom(GardenListViewModel.class)) {
+            return (T) new GardenListViewModel(this.gardenDao);
         }
         //noinspection unchecked
         throw new IllegalArgumentException("Unknown ViewModel class");

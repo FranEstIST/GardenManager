@@ -131,6 +131,9 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
     @Override
     public boolean containsItem(long itemId) {
+        // TODO: Make this method return false iff the deviceWithReadings corresponding to itemId
+        // has been changed, so that each fragment is only reloaded if necessary
+
         return itemId == -1;
         /*|| this.devicesWithReadings
                 .stream()

@@ -1,20 +1,51 @@
 package pt.ulisboa.tecnico.gardenmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentSecondBinding;
+import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
+import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
+    private final String TAG = "GardenListFragment";
+
+    private GlobalClass globalClass;
+
+    private GardenDatabase gardenDatabase;
+    private GardenListViewModel gardenListViewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.globalClass = (GlobalClass) this.getActivity().getApplicationContext();
+
+        this.gardenDatabase = this.globalClass.getGardenDatabase();
+
+        this.gardenListViewModel = new ViewModelFactory(
+                gardenDatabase.gardenDao(),
+                gardenDatabase.deviceDao(),
+                gardenDatabase.readingDao()
+        ).create(GardenListViewModel.class);
+    }
 
     @Override
     public View onCreateView(
@@ -30,11 +61,15 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
+        binding.addNewGardenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                /*NavHostFragment.findNavController(SecondFragment.this)
+                        .navigate(R.id.action_SecondFragment_to_FirstFragment);*/
+
+                Intent intent = new Intent(SecondFragment.this.getActivity().getApplicationContext(),
+                        AddNewGardenPopUpActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -49,6 +84,14 @@ public class SecondFragment extends Fragment {
         if(mainActivity != null && mainActivity.binding != null) {
             mainActivity.binding.appBarMain.appBarTitle.setText(R.string.my_gardens);
         }
+
+        this.gardenListViewModel.getAllGardensWithDevices().observe(getViewLifecycleOwner(), new Observer<List<GardenWithDevices>>() {
+            @Override
+            public void onChanged(@Nullable List<GardenWithDevices> gardensWithDevices) {
+                Log.d(TAG, "List of gardens has been updated");
+                gardenListAdapter.setGardensWithDevices(new ArrayList<>(gardensWithDevices));
+            }
+        });
     }
 
     @Override

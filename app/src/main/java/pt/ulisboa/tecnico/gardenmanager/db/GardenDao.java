@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.gardenmanager.db;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -27,7 +28,7 @@ public interface GardenDao {
 
     @Transaction
     @Query("SELECT * FROM garden")
-    Single<List<GardenWithDevices>> getAllGardensWithDevices();
+    LiveData<List<GardenWithDevices>> getAllGardensWithDevices();
 
     @Insert
     Completable insertAll(Garden... gardens);
