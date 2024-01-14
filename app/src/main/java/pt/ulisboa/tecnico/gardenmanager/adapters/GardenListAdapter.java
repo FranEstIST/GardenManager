@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
+import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;

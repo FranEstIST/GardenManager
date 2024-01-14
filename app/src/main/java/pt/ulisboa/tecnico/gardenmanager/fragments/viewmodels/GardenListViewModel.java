@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;

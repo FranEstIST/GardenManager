@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
+import pt.ulisboa.tecnico.gardenmanager.R;
+import pt.ulisboa.tecnico.gardenmanager.activities.AddNewDevicePopUpActivity;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.gardenmanager.adapters.GardenListAdapter;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenListViewModel;
+import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
+import pt.ulisboa.tecnico.gardenmanager.R;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.ViewModelFactory;
+import pt.ulisboa.tecnico.gardenmanager.activities.AddNewGardenPopUpActivity;
+import pt.ulisboa.tecnico.gardenmanager.activities.MainActivity;
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentGardenListBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;

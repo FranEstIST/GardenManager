@@ -1,5 +1,6 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.utils;
 
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.domain.ReadingType;
 
 public class DeviceTypeToReadingTypeConverter {

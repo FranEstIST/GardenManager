@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

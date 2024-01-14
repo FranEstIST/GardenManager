@@ -11,10 +11,9 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
-import pt.ulisboa.tecnico.gardenmanager.DeviceType;
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
-import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 
 @Dao
 public interface DeviceDao {

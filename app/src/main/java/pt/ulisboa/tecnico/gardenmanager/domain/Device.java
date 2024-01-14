@@ -3,10 +3,6 @@ package pt.ulisboa.tecnico.gardenmanager.domain;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
-
-import pt.ulisboa.tecnico.gardenmanager.DeviceType;
-
 @Entity
 public class Device {
     @PrimaryKey

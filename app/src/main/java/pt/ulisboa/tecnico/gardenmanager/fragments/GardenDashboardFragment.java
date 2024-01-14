@@ -1,11 +1,10 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.fragments;
 
-import static pt.ulisboa.tecnico.gardenmanager.DeviceSwipeCardsFragment.ACTUATOR_MODE;
-import static pt.ulisboa.tecnico.gardenmanager.DeviceSwipeCardsFragment.SENSOR_MODE;
+import static pt.ulisboa.tecnico.gardenmanager.fragments.DeviceSwipeCardsFragment.ACTUATOR_MODE;
+import static pt.ulisboa.tecnico.gardenmanager.fragments.DeviceSwipeCardsFragment.SENSOR_MODE;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,31 +13,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 //import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenDashboardViewModel;
+import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
+import pt.ulisboa.tecnico.gardenmanager.R;
+import pt.ulisboa.tecnico.gardenmanager.adapters.SwipeCardAdapter;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.ViewModelFactory;
+import pt.ulisboa.tecnico.gardenmanager.activities.MainActivity;
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentGardenDashboardBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
-import pt.ulisboa.tecnico.gardenmanager.domain.Device;
-import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
-import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
-import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 
 public class GardenDashboardFragment extends Fragment {
 

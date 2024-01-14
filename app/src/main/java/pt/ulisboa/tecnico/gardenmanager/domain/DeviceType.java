@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.domain;
 
 public enum DeviceType {
     TEMPERATURE_SENSOR,

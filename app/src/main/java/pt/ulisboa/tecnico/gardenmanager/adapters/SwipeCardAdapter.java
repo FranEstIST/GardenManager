@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,8 +14,12 @@ import java.util.ArrayList;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenDashboardViewModel;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.ViewModelFactory;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
+import pt.ulisboa.tecnico.gardenmanager.fragments.SwipeCardFragment;
 
 public class SwipeCardAdapter extends FragmentStateAdapter {
     private DeviceType deviceType;

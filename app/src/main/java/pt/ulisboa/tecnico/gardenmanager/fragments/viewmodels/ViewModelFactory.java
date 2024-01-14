@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.gardenmanager;
+package pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider;
 import pt.ulisboa.tecnico.gardenmanager.db.DeviceDao;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDao;
 import pt.ulisboa.tecnico.gardenmanager.db.ReadingDao;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenDashboardViewModel;
+import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenListViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
