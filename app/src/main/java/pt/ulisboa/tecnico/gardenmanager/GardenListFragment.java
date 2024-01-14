@@ -62,9 +62,6 @@ public class GardenListFragment extends Fragment {
         binding.addNewGardenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);*/
-
                 Intent intent = new Intent(GardenListFragment.this.getActivity().getApplicationContext(),
                         AddNewGardenPopUpActivity.class);
                 startActivity(intent);

@@ -1,12 +1,10 @@
 package pt.ulisboa.tecnico.gardenmanager;
 
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,18 +21,15 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
     private ArrayList<GardenWithDevices> gardensWithDevices;
     private GlobalClass globalClass;
 
-    /*public GardenListAdapter(ArrayList<GardenWithDevices> gardensWithDevices) {
-        this.gardensWithDevices = gardensWithDevices;
-    }*/
-
-    public GardenListAdapter(GlobalClass globalClass) {
-        this.gardensWithDevices = new ArrayList<>();
+    public GardenListAdapter(GlobalClass globalClass, ArrayList<GardenWithDevices> gardensWithDevices) {
         this.globalClass = globalClass;
+        this.gardensWithDevices = gardensWithDevices;
     }
 
-    /*public GardenListAdapter() {
+    public GardenListAdapter(GlobalClass globalClass) {
+        this.globalClass = globalClass;
         this.gardensWithDevices = new ArrayList<>();
-    }*/
+    }
 
     @NonNull
     @Override
@@ -99,14 +94,7 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
 
             Log.d(TAG, "Clicked garden at position: " + clickedPosition);
 
-            /*Toast.makeText(globalClass,
-                    "Clicked garden at position: " + clickedPosition,
-                    Toast.LENGTH_SHORT).show();*/
-
             notifyDataSetChanged();
-
-            // TODO: Navigate to the respective garden dashboard
-            // getAdapterPosition() will come in handy
         }
     }
 }

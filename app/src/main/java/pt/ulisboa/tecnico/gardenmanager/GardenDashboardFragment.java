@@ -52,8 +52,6 @@ public class GardenDashboardFragment extends Fragment {
     private GardenDatabase gardenDatabase;
     private GardenDashboardViewModel gardenDashboardViewModel;
 
-    private int mode;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +66,6 @@ public class GardenDashboardFragment extends Fragment {
                 gardenDatabase.deviceDao(),
                 gardenDatabase.readingDao()
         ).create(GardenDashboardViewModel.class);
-
-        this.mode = SENSOR_MODE;
     }
 
     @Override
@@ -177,8 +173,6 @@ public class GardenDashboardFragment extends Fragment {
                             }
                         });
             }
-
-            //mainActivity.binding.appBarMain.appBarTitle.setText("Alameda Garden 1");
         }
 
         if(currentGardenId == -1) {

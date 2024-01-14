@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
-import pt.ulisboa.tecnico.gardenmanager.db.DeviceDao;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDao;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;

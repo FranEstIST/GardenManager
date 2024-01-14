@@ -7,17 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
-import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
 
 public class SwipeCardAdapter extends FragmentStateAdapter {
@@ -75,14 +72,9 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if(position == (this.getItemCount() - 1)) {
-            // TODO: The last swipe card in the swipe card pager should show a button to
-            // add a new device (i.e. a new swipe card) to this pager
             SwipeCardFragment swipeCardFragment = SwipeCardFragment.newLastSwipeCardInstance(this.deviceType);
             return swipeCardFragment;
         }
-
-        //String deviceName = "" + (position + 1);
-        //String value = "" + (position*10);
 
         DeviceWithReadings deviceWithReadings = this.devicesWithReadings.get(position);
 
@@ -90,36 +82,32 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
         String valueString = "N/A";
 
-        long value = 0;
-
         if(deviceWithReadings.readings.size() > 0) {
-            // Check if this device has any readings
-            value = deviceWithReadings.readings.get(deviceWithReadings.readings.size() - 1).getValue();
-        }
+            // The latest reading can only be displayed if this device has any readings
 
-        switch(this.deviceType) {
-            case TEMPERATURE_SENSOR:
-                //deviceName = "TempSensor" + deviceName;
-                valueString = value + "ºC";
-                break;
-            case LIGHT_SENSOR:
-            case HUMIDITY_SENSOR:
-            case LAMP:
-            case SPRINKLER:
-                //deviceName = "HumSensor" + deviceName;
-                valueString = value + "%";
-                break;
-            case MONITOR:
-                if(value == 0) {
-                    valueString = "OFF";
-                } else {
-                    valueString = "ON";
-                }
-                break;
-            default:
-                //deviceName = "Device " + deviceName;
-                valueString = value + "";
-                break;
+            long value = deviceWithReadings.readings.get(deviceWithReadings.readings.size() - 1).getValue();
+
+            switch(this.deviceType) {
+                case TEMPERATURE_SENSOR:
+                    valueString = value + "ºC";
+                    break;
+                case LIGHT_SENSOR:
+                case HUMIDITY_SENSOR:
+                case LAMP:
+                case SPRINKLER:
+                    valueString = value + "%";
+                    break;
+                case MONITOR:
+                    if(value == 0) {
+                        valueString = "OFF";
+                    } else {
+                        valueString = "ON";
+                    }
+                    break;
+                default:
+                    valueString = value + "";
+                    break;
+            }
         }
 
         SwipeCardFragment swipeCardFragment = SwipeCardFragment.newInstance(this.deviceType

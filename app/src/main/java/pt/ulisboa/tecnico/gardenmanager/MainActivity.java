@@ -3,13 +3,8 @@ package pt.ulisboa.tecnico.gardenmanager;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -18,16 +13,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.room.Room;
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.observers.DisposableSingleObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
-import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,87 +52,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        /*TextView appBarTitleTextView = binding.appBarMain.appBarTitle;
-
-        int currentGardenId = globalClass.getCurrentGardenId();
-
-        if(currentGardenId == -1) {
-            appBarTitleTextView.setText("No Garden Selected");
-        } else {
-            globalClass.getGardenDatabase().gardenDao().findById(currentGardenId)
-                    .observeOn(Schedulers.newThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new DisposableSingleObserver<Garden>() {
-                        @Override
-                        public void onSuccess(@NonNull Garden garden) {
-                            appBarTitleTextView.setText(garden.getName());
-                        }
-
-                        @Override
-                        public void onError(@NonNull Throwable e) {
-                            e.printStackTrace();
-                        }
-                    });
-        }*/
-
-        // appBarTitleTextView.setText("Alameda Garden 1");
-
-        /*ActionBar actionBar = getSupportActionBar();
-        DrawerLayout drawerLayout = binding.getRoot();
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.not_available, R.string.not_available) {
-
-            public void onDrawerClosed(View view) {
-                supportInvalidateOptionsMenu();
-                //drawerOpened = false;
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                supportInvalidateOptionsMenu();
-                //drawerOpened = true;
-            }
-        };
-
-        drawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.setDrawerListener(drawerToggle);
-        drawerToggle.syncState();*/
-
-        /*binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
-        /*SwipeCardAdapter swipeCardAdapter = new SwipeCardAdapter(getSupportFragmentManager());
-
-        binding.swipeCardViewPager.setAdapter(swipeCardAdapter);*/
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     @Override
     public boolean onSupportNavigateUp() {

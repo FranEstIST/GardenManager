@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.gardenmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -11,13 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityAddNewDevicePopUpBinding;
-import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
@@ -27,8 +22,6 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
     public static final String TAG = "AddNewDevicePopUpActivity";
     public ActivityAddNewDevicePopUpBinding binding;
     private GlobalClass globalClass;
-
-    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +97,7 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
 
                 Reading latestReading = new Reading(deviceIdInt, readingLong, readingType);
 
-                // TODO: Save the device and latest reading to the db
+                // Save the device and latest reading to the db
 
                 gardenDatabase.deviceDao().insertAll(newDevice)
                         .observeOn(Schedulers.newThread())
@@ -134,37 +127,6 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         });
-
-                /*new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        gardenDatabase.deviceDao().insertAll(newDevice).andThen(
-                                gardenDatabase.readingDao().insertAll(latestReading)
-                        ).subscribe(new DisposableCompletableObserver() {
-                            @Override
-                            public void onComplete() {
-                                Log.d(TAG, "Added device");
-                                gardenDatabase.readingDao().insertAll(latestReading).subscribe(new DisposableCompletableObserver() {
-                                    @Override
-                                    public void onComplete() {
-                                        Log.d(TAG, "Added reading");
-                                    }
-
-                                    @Override
-                                    public void onError(@NonNull Throwable e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                            }
-                        });
-                    }
-                }).run();*/
-                //gardenDatabase.deviceDao().insertAll()
             }
         });
     }
