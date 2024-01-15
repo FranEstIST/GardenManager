@@ -155,7 +155,7 @@ public class GardenDashboardFragment extends Fragment {
             } else {
                 globalClass.getGardenDatabase().gardenDao().findById(currentGardenId)
                         .observeOn(Schedulers.newThread())
-                        //.subscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.io())
                         .subscribe(new DisposableSingleObserver<Garden>() {
                             @Override
                             public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Garden garden) {

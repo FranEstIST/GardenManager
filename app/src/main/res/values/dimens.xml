@@ -3,4 +3,6 @@
     <dimen name="swipeCardWidth">150dp</dimen>
     <dimen name="swipeCardHeight">150dp</dimen>
     <dimen name="swipeCardFrameHeight">250dp</dimen>
+    <dimen name="addOptionsButtonWidth">120dp</dimen>
+    <dimen name="addOptionsButtonHeight">120dp</dimen>
 </resources>

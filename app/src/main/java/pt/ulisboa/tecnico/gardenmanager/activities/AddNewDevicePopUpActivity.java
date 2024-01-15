@@ -1,17 +1,22 @@
 package pt.ulisboa.tecnico.gardenmanager.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import pt.ulisboa.tecnico.gardenmanager.R;
+import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityAddNewDevicePopUp2Binding;
+import pt.ulisboa.tecnico.gardenmanager.databinding.AddOptionsButtonBinding;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.utils.DeviceTypeToReadingTypeConverter;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
@@ -23,13 +28,13 @@ import pt.ulisboa.tecnico.gardenmanager.domain.ReadingType;
 
 public class AddNewDevicePopUpActivity extends AppCompatActivity {
     public static final String TAG = "AddNewDevicePopUpActivity";
-    public ActivityAddNewDevicePopUpBinding binding;
+    public ActivityAddNewDevicePopUp2Binding binding;
     private GlobalClass globalClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAddNewDevicePopUpBinding.inflate(getLayoutInflater());
+        binding = ActivityAddNewDevicePopUp2Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         DisplayMetrics dm = new DisplayMetrics();
@@ -37,7 +42,23 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
 
         this.getWindow().setLayout((int) (dm.widthPixels * 0.5), (int) (dm.heightPixels * 0.5));
 
-        TextView editDeviceIdTextView = binding.editDeviceIdTextView;
+        AddOptionsButtonBinding addExistingDeviceButtonBinding = binding.addExistingDeviceButton;
+
+        TextView addExistingDeviceTextView = addExistingDeviceButtonBinding.addOptionsButtonTextView;
+        ImageView addExistingDeviceIconImageView = addExistingDeviceButtonBinding.addOptionsButtonIconImageView;
+
+        addExistingDeviceTextView.setText(R.string.add_existing_device);
+        addExistingDeviceIconImageView.setImageResource(R.drawable.ic_baseline_search_black_24);
+
+        AddOptionsButtonBinding createNewDeviceButtonBinding = binding.createNewDeviceButton;
+
+        TextView createNewDeviceTextView = createNewDeviceButtonBinding.addOptionsButtonTextView;
+        ImageView createNewDeviceIconImageView = createNewDeviceButtonBinding.addOptionsButtonIconImageView;
+
+        createNewDeviceTextView.setText(R.string.create_new_device);
+        createNewDeviceIconImageView.setImageResource(R.drawable.create_new_icon_v2);
+
+        /*TextView editDeviceIdTextView = binding.editDeviceIdTextView;
         TextView editDeviceNameTextView = binding.editDeviceNameTextView;
         TextView editLatestReadingTextView = binding.editReadingValueTextView;
         Button submitButton = binding.submitButton;
@@ -131,6 +152,6 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
                             }
                         });
             }
-        });
+        });*/
     }
 }
