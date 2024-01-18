@@ -22,6 +22,8 @@ public class AddNewGardenPopUpActivity extends AppCompatActivity {
     public ActivityAddNewGardenPopUpBinding binding;
     private GlobalClass globalClass;
 
+    private int mode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

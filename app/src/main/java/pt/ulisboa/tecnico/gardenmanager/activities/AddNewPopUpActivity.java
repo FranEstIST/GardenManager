@@ -1,48 +1,46 @@
 package pt.ulisboa.tecnico.gardenmanager.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.R;
-import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityAddNewDevicePopUp2Binding;
-import pt.ulisboa.tecnico.gardenmanager.databinding.AddOptionsButtonBinding;
-import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
-import pt.ulisboa.tecnico.gardenmanager.utils.DeviceTypeToReadingTypeConverter;
+import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityAddNewPopUpBinding;
+import pt.ulisboa.tecnico.gardenmanager.fragments.AddOptionsFragment;
+import pt.ulisboa.tecnico.gardenmanager.fragments.CreateNewFragment;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
-import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityAddNewDevicePopUpBinding;
-import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
-import pt.ulisboa.tecnico.gardenmanager.domain.Device;
-import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
-import pt.ulisboa.tecnico.gardenmanager.domain.ReadingType;
 
-public class AddNewDevicePopUpActivity extends AppCompatActivity {
+public class AddNewPopUpActivity extends AppCompatActivity implements AddOptionsFragment.SelectAddOptionListener {
     public static final String TAG = "AddNewDevicePopUpActivity";
-    public ActivityAddNewDevicePopUp2Binding binding;
+    public ActivityAddNewPopUpBinding binding;
     private GlobalClass globalClass;
+    private int mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAddNewDevicePopUp2Binding.inflate(getLayoutInflater());
+        binding = ActivityAddNewPopUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Intent receivedIntent = getIntent();
+        mode = receivedIntent.getIntExtra("mode", -1);
 
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         this.getWindow().setLayout((int) (dm.widthPixels * 0.5), (int) (dm.heightPixels * 0.5));
 
-        AddOptionsButtonBinding addExistingDeviceButtonBinding = binding.addExistingDeviceButton;
+        Fragment addOptionsFragment = AddOptionsFragment.newInstance(mode);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.addNewFragmentContainerView, addOptionsFragment)
+                .commit();
+
+        /*AddOptionsButtonBinding addExistingDeviceButtonBinding = binding.addExistingDeviceButton;
 
         TextView addExistingDeviceTextView = addExistingDeviceButtonBinding.addOptionsButtonTextView;
         ImageView addExistingDeviceIconImageView = addExistingDeviceButtonBinding.addOptionsButtonIconImageView;
@@ -57,6 +55,18 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
 
         createNewDeviceTextView.setText(R.string.create_new_device);
         createNewDeviceIconImageView.setImageResource(R.drawable.create_new_icon_v2);
+
+        CardView createNewDeviceCardView = createNewDeviceButtonBinding.addOptionsButtonCardView;
+
+        createNewDeviceCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // This doesn't work (as expected)
+                // Perhaps this pop up should be a dialog fragment
+                Fragment addExistingDeviceFragment = new AddExistingDeviceFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_content_main, addExistingDeviceFragment).commit();
+            }
+        });*/
 
         /*TextView editDeviceIdTextView = binding.editDeviceIdTextView;
         TextView editDeviceNameTextView = binding.editDeviceNameTextView;
@@ -153,5 +163,43 @@ public class AddNewDevicePopUpActivity extends AppCompatActivity {
                         });
             }
         });*/
+    }
+
+    @Override
+    public void onAddExistingClick() {
+        /*DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        this.getWindow().setLayout((int) dm.widthPixels, (int) dm.heightPixels);
+
+        this.getWindow().setBackgroundDrawableResource(R.drawable.white_bg);
+
+        Fragment addExistingDeviceOptionsFragment = new AddExistingDeviceFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.addNewDeviceFragmentContainerView, addExistingDeviceOptionsFragment)
+                .commit();*/
+
+        // This code returns to the calling activity so that it can call the search activity
+        /*Intent returnIntent = new Intent();
+        returnIntent.putExtra("addNewPopUpResultCode", AddNewPopUpReturnCodes.ADD_EXISTING);
+        setResult(Activity.RESULT_OK, returnIntent);*/
+
+        // This code calls the search activity directly
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("mode", mode);
+        startActivity(intent);
+        //setResult(Activity.RESULT_OK, returnIntent);
+
+        finish();
+    }
+
+    @Override
+    public void onCreateNewClick() {
+        Fragment createNewFragment = CreateNewFragment.newInstance(mode);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.addNewFragmentContainerView, createNewFragment)
+                .commit();
     }
 }

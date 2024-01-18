@@ -32,9 +32,20 @@
 
     <string name="add_existing_device">Add Existing Device</string>
     <string name="create_new_device">Create New Device</string>
+    <string name="create_device">Create Device</string>
 
     <string name="add_new_garden">Add New Garden</string>
     <string name="garden_id">Garden ID</string>
     <string name="garden_name">Garden name</string>
+
+    <string name="add_existing_garden">Add Existing Garden</string>
+    <string name="create_new_garden">Create New Garden</string>
+    <string name="create_garden">Create Garden</string>
+
+    <string name="search">Search</string>
+    <string name="type_a_device_name_or_id">Type a device name or id</string>
+    <string name="type_a_garden_name_or_id">Type a garden name or id</string>
+    <string name="search_for_a_device_to_add_it">Search for a device to add it</string>
+    <string name="search_for_a_garden_to_add_it">Search for a garden to add it</string>
 
 </resources>

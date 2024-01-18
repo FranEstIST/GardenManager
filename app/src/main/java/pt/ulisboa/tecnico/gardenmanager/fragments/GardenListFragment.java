@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.gardenmanager.activities.AddNewPopUpActivity;
 import pt.ulisboa.tecnico.gardenmanager.adapters.GardenListAdapter;
+import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenListViewModel;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.R;
@@ -70,7 +72,8 @@ public class GardenListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GardenListFragment.this.getActivity().getApplicationContext(),
-                        AddNewGardenPopUpActivity.class);
+                        AddNewPopUpActivity.class);
+                intent.putExtra("mode", ViewModes.GARDEN_MODE);
                 startActivity(intent);
             }
         });

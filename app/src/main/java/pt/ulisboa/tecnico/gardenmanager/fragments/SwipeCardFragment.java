@@ -1,8 +1,14 @@
 package pt.ulisboa.tecnico.gardenmanager.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -12,10 +18,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import pt.ulisboa.tecnico.gardenmanager.activities.SearchActivity;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.R;
-import pt.ulisboa.tecnico.gardenmanager.activities.AddNewDevicePopUpActivity;
+import pt.ulisboa.tecnico.gardenmanager.activities.AddNewPopUpActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +42,50 @@ public class SwipeCardFragment extends Fragment {
     private String value;
 
     private boolean isLastSwipeCard = false;
+
+    public static final int CREATE_NEW = 0;
+    public static final int ADD_EXISTING = 1;
+
+    ActivityResultLauncher<String> addNewDeviceActivityResultLauncher = registerForActivityResult(new ActivityResultContract<String, Integer>() {
+        @NonNull
+        @Override
+        public Intent createIntent(@NonNull Context context, String input) {
+            Intent intent = new Intent(SwipeCardFragment.this.getActivity().getApplicationContext(), AddNewPopUpActivity.class);
+            intent.putExtra("deviceType", input);
+            return intent;
+        }
+
+        @Override
+        public Integer parseResult(int resultCode, @Nullable Intent intent) {
+            if(intent != null && intent.hasExtra("addNewDevicePopUpResultCode")) {
+                return intent.getIntExtra("addNewDevicePopUpResultCode", -1);
+            }
+            return -1;
+        }
+    }, new ActivityResultCallback<Integer>() {
+        @Override
+        public void onActivityResult(Integer result) {
+            if(result == ADD_EXISTING) {
+                Toast.makeText(getActivity().getApplicationContext(), "Add existing device", Toast.LENGTH_SHORT).show();
+
+                // TODO: Instead of replacing the nav host frame, use it to navigate to this fragment
+                /*Fragment addExistingDeviceFragment = new AddExistingDeviceFragment();
+
+                getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, addExistingDeviceFragment)
+                        .commit();*/
+
+                //NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                //navController.navigate();
+
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                intent.putExtra("mode", SearchActivity.DEVICE_MODE);
+                startActivity(intent);
+            }
+        }
+    });
 
     public SwipeCardFragment() {
         // Required empty public constructor
@@ -199,9 +251,20 @@ public class SwipeCardFragment extends Fragment {
                 //  1. Open an overlay where the user can input the device name (and at this point also the reading's value)
                 //  2. After the user submits the new device, save it to the db
 
-                Intent intent = new Intent(SwipeCardFragment.this.getActivity().getApplicationContext(), AddNewDevicePopUpActivity.class);
+                /*Intent intent = new Intent(SwipeCardFragment.this.getActivity().getApplicationContext(), AddNewDevicePopUpActivity.class);
                 intent.putExtra("deviceType", SwipeCardFragment.this.deviceType.name());
+                startActivity(intent);*/
+
+                //addNewDeviceActivityResultLauncher.launch(deviceType.name());
+
+                Intent intent = new Intent(getContext(), AddNewPopUpActivity.class);
+                intent.putExtra("mode", SearchActivity.DEVICE_MODE);
                 startActivity(intent);
+
+                //NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                //navController.navigate();
+
+                //new AddPopUpFragment().show(getActivity().getSupportFragmentManager(), "ADD_NEW_DEVICE_DIALOG");
             }
         });
     }
