@@ -167,29 +167,10 @@ public class AddNewPopUpActivity extends AppCompatActivity implements AddOptions
 
     @Override
     public void onAddExistingClick() {
-        /*DisplayMetrics dm = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        this.getWindow().setLayout((int) dm.widthPixels, (int) dm.heightPixels);
-
-        this.getWindow().setBackgroundDrawableResource(R.drawable.white_bg);
-
-        Fragment addExistingDeviceOptionsFragment = new AddExistingDeviceFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.addNewDeviceFragmentContainerView, addExistingDeviceOptionsFragment)
-                .commit();*/
-
-        // This code returns to the calling activity so that it can call the search activity
-        /*Intent returnIntent = new Intent();
-        returnIntent.putExtra("addNewPopUpResultCode", AddNewPopUpReturnCodes.ADD_EXISTING);
-        setResult(Activity.RESULT_OK, returnIntent);*/
-
         // This code calls the search activity directly
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("mode", mode);
         startActivity(intent);
-        //setResult(Activity.RESULT_OK, returnIntent);
 
         finish();
     }

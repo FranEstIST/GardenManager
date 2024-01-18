@@ -19,10 +19,6 @@
             android:exported="false"
             android:theme="@style/Theme.GardenManager.NoActionBar" />
         <activity
-            android:name=".activities.AddNewGardenPopUpActivity"
-            android:exported="false"
-            android:theme="@style/Theme.GardenManagerPopUp" />
-        <activity
             android:name=".activities.AddNewPopUpActivity"
             android:exported="false"
             android:theme="@style/Theme.GardenManagerPopUp" />

@@ -30,10 +30,7 @@ public class AddOptionsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String MODE = "mode";
 
-    public static final int DEVICE_MODE = 0;
-    public static final int GARDEN_MODE = 1;
-
-    private int mode = DEVICE_MODE;
+    private int mode;
 
     private FragmentAddOptionsBinding binding;
 

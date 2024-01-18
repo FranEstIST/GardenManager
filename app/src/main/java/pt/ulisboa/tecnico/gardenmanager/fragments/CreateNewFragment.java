@@ -34,6 +34,7 @@ public class CreateNewFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
+     * @param mode The view mode for this fragment
      * @return A new instance of fragment CreateNewDeviceFragment.
      */
     // TODO: Rename and change types and number of parameters

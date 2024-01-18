@@ -23,7 +23,6 @@ import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenListViewModel
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.ViewModelFactory;
-import pt.ulisboa.tecnico.gardenmanager.activities.AddNewGardenPopUpActivity;
 import pt.ulisboa.tecnico.gardenmanager.activities.MainActivity;
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentGardenListBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.gardenmanager.R;
+import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivitySearchBinding;
 
@@ -24,9 +25,6 @@ public class SearchActivity extends AppCompatActivity {
     private ActivitySearchBinding binding;
 
     private static final String TAG = "SearchActivity";
-
-    public static final int DEVICE_MODE = 0;
-    public static final int GARDEN_MODE = 1;
 
     private int mode;
 
@@ -44,12 +42,11 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //getSupportActionBar().on
 
         String appBarTitle;
         String searchText;
 
-        if(mode == DEVICE_MODE) {
+        if(mode == ViewModes.DEVICE_MODE) {
             appBarTitle = getString(R.string.add_existing_device);
             searchText = getString(R.string.search_for_a_device_to_add_it);
         } else {
@@ -68,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         String queryHint;
 
-        if(mode == DEVICE_MODE) {
+        if(mode == ViewModes.DEVICE_MODE) {
             queryHint = getString(R.string.type_a_device_name_or_id);
         } else {
             queryHint = getString(R.string.type_a_garden_name_or_id);
