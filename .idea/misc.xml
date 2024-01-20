@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/drawable-v24/device_search_list_item_bg.xml" value="0.1" />
+        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/drawable-v24/device_search_list_item_no_network_bg.xml" value="0.1" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/drawable-v24/garden_list_item_selected_bg.xml" value="0.1375" />
+        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/drawable-v24/garden_search_list_item_bg.xml" value="0.1" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.124" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/drawable-v24/pop_up_bg_light.xml" value="0.1" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/drawable/add_options_button_bg_light.xml" value="0.1" />
@@ -27,7 +30,7 @@
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/add_options_button.xml" value="0.6" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/app_bar_main.xml" value="0.21189752496743378" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/content_main.xml" value="0.264" />
-        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/device_search_list_item.xml" value="0.6" />
+        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/device_search_list_item.xml" value="0.264" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_add_existing_device.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_add_options.xml" value="0.2" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_add_pop_up.xml" value="0.1" />
@@ -36,12 +39,13 @@
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_device_swipe_cards2.xml" value="0.16077898550724637" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_first.xml" value="0.176" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_garden_dashboard.xml" value="0.12360688956433637" />
-        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_garden_list.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_garden_list.xml" value="0.264" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_second.xml" value="0.2" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_sensors_dashboard.xml" value="0.16077898550724637" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/fragment_swipe_card.xml" value="0.152" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/framed_swipe_card.xml" value="0.17527173913043478" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/garden_list_item.xml" value="0.4" />
+        <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/garden_search_list_item.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/side_menu.xml" value="0.2341485507246377" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/layout/swipe_card.xml" value="0.25" />
         <entry key="..\:/Users/Francisco/Documents/Universidade/Mestrado/Ano_2/Semestre_2/DMEIC/Code/GardenManager/app/src/main/res/menu/menu_main.xml" value="0.25416666666666665" />

@@ -47,5 +47,8 @@
     <string name="type_a_garden_name_or_id">Type a garden name or id</string>
     <string name="search_for_a_device_to_add_it">Search for a device to add it</string>
     <string name="search_for_a_garden_to_add_it">Search for a garden to add it</string>
+    <string name="no_results_found">No results found</string>
+
+    <string name="in_garden">In this garden</string>
 
 </resources>

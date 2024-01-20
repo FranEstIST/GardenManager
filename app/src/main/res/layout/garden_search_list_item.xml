@@ -2,22 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/deviceSearchListItem"
+    android:id="@+id/gardenSearchListItem"
     android:layout_width="400dp"
     android:layout_height="70dp"
     android:layout_gravity="center"
     android:layout_marginTop="6dp"
     android:layout_marginBottom="6dp"
-    android:background="@drawable/device_search_list_item_bg">
+    android:background="@drawable/garden_search_list_item_bg">
 
     <TextView
-        android:id="@+id/deviceNameTextView"
+        android:id="@+id/gardenNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:text="@string/not_available"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/deviceIdTextView"
+        app:layout_constraintBottom_toTopOf="@id/gardenIdTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.043"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
         app:layout_constraintVertical_bias="0.333" />
 
     <TextView
-        android:id="@+id/deviceIdTextView"
+        android:id="@+id/gardenIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/not_available"
@@ -34,20 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.043"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/deviceNameTextView"
+        app:layout_constraintTop_toBottomOf="@id/gardenNameTextView"
         app:layout_constraintVertical_bias="0.791" />
-
-    <TextView
-        android:id="@+id/deviceStatusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:text="@string/not_available"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.941"
-        app:layout_constraintStart_toEndOf="@+id/deviceNameTextView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.509" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
