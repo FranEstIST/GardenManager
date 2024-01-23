@@ -70,6 +70,16 @@ public class SearchActivity extends AppCompatActivity {
         binding.searchItemsRecyclerView.setLayoutManager(layoutManager);
 
         searchListAdapter = new SearchListAdapter(mode);
+
+        // --------------------------------------------------------------------------
+        // First (naive) solution: Let's download the whole list of networks from
+        // the WN Server, and then search this list
+        // TODO: Fill out the search adapter with the list of networks/devices
+        // --------------------------------------------------------------------------
+        // Second (Pro) solution: Let's query the server for a list of networks
+        // corresponding to the user input every time it changes
+        // --------------------------------------------------------------------------
+
         binding.searchItemsRecyclerView.setAdapter(searchListAdapter);
     }
 
