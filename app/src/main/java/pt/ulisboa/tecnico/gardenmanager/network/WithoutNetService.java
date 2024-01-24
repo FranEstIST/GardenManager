@@ -13,15 +13,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
+import pt.ulisboa.tecnico.gardenmanager.constants.StatusCodes;
 
 public class WithoutNetService {
     private GlobalClass globalClass;
     private RequestQueue requestQueue;
 
-    private static final String BASE_URL = "http://192.168.1.102:8081/";
+    private static final String BASE_URL = "https://192.168.1.102:8081/";
     private static final String GET_MESSAGES_URL = BASE_URL + "get-most-recent-messages-by-sender-and-receiver";
     private static final String GET_NETWORK_BY_ID_BASE_URL = BASE_URL + "get-network-by-id/";
     private static final String GET_NODES_WITHOUT_A_NETWORK_URL = BASE_URL + "get-nodes-without-a-network";
+    private static final String ADD_NETWORK_URL = BASE_URL + "add-network";
     private static final String ADD_NODE_URL = BASE_URL + "add-node";
     private static final String ADD_NODE_TO_NETWORK_URL = BASE_URL + "add-node-to-network";
     private static final String REMOVE_NODE_FROM_NETWORK_URL = BASE_URL + "remove-node-from-network";
@@ -94,7 +96,60 @@ public class WithoutNetService {
 
     }
 
-    public void addDeviceToGarden(String deviceName, int gardenId) {
+    public void addGarden(String gardenName, WithoutNetServiceResponseListener responseListener) {
+        String url = ADD_NETWORK_URL;
+
+        JSONObject jsonRequest = new JSONObject();
+
+        try {
+            jsonRequest.put("name", gardenName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        /*StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });*/
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    responseListener.onResponse(response);
+                } else {
+                    // TODO: Handle error status codes
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
+    }
+
+    public void addDeviceToGarden(String deviceName, int gardenId, WithoutNetServiceResponseListener responseListener) {
         // Step 1: Add node to the server
 
         String url = ADD_NODE_URL;
@@ -138,12 +193,25 @@ public class WithoutNetService {
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        int status = StatusCodes.UNKNOWN_ERROR;
 
+                        try {
+                            status = response.getInt("status");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(status == StatusCodes.OK) {
+                            responseListener.onResponse(response);
+                        } else {
+                            // TODO: Handle error status codes
+                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        error.printStackTrace();
+                        responseListener.onError(error.getMessage());
                     }
                 });
 
@@ -191,4 +259,9 @@ public class WithoutNetService {
     // public void deleteDevice(int deviceId) { }
 
     // public void getDeviceReadings(int deviceId) { }
+
+    public interface WithoutNetServiceResponseListener {
+        public void onResponse(Object response);
+        public void onError(String errorMessage);
+    }
 }
