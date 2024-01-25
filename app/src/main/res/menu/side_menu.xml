@@ -12,6 +12,10 @@
         android:id="@+id/SecondFragment"
         android:title="My Gardens" />
 
+    <item
+        android:id="@+id/SettingsFragment"
+        android:title="@string/settings" />
+
     <!--<item
         android:id="@+id/nav_settings"
         android:title="Settings" />
