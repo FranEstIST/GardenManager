@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.constants.StatusCodes;
+import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
 
 public class WithoutNetService {
     private GlobalClass globalClass;
@@ -133,7 +134,12 @@ public class WithoutNetService {
                 }
 
                 if(status == StatusCodes.OK) {
-                    responseListener.onResponse(response);
+                    try {
+                        JSONObject gardenJsonObject = response.getJSONObject("network");
+                        responseListener.onResponse(new GardenDto(gardenJsonObject));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     // TODO: Handle error status codes
                 }

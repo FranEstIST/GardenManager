@@ -23,6 +23,7 @@ import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentCreateNewBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.network.WithoutNetService;
+import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,24 +112,11 @@ public class CreateNewFragment extends Fragment {
                     WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
                         @Override
                         public void onResponse(Object response) {
-                            JSONObject responseJsonObject = (JSONObject) response;
-                            JSONObject gardenJsonObject;
-
-                            int id;
-                            String name;
-
-                            try {
-                                gardenJsonObject = responseJsonObject.getJSONObject("network");
-                                id = gardenJsonObject.getInt("id");
-                                name = gardenJsonObject.getString("name");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                return;
-                            }
+                            GardenDto gardenDto = (GardenDto) response;
 
                             // Create and save the new garden to the database
 
-                            Garden newGarden = new Garden(id, name);
+                            Garden newGarden = new Garden(gardenDto);
 
                             GardenDatabase gardenDatabase = globalClass.getGardenDatabase();
 

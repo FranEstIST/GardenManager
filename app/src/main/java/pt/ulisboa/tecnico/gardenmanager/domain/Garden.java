@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
+
 @Entity
 public class Garden {
     @PrimaryKey
@@ -16,6 +18,11 @@ public class Garden {
     public Garden(int gardenId, String name) {
         this.gardenId = gardenId;
         this.name = name;
+    }
+
+    public Garden(GardenDto gardenDto) {
+        this.gardenId = gardenDto.getId();
+        this.name = gardenDto.getName();
     }
 
     public int getGardenId() {
