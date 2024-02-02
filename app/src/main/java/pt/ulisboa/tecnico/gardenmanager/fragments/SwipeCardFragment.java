@@ -210,6 +210,7 @@ public class SwipeCardFragment extends Fragment {
 
                 Intent intent = new Intent(getContext(), AddNewPopUpActivity.class);
                 intent.putExtra("mode", ViewModes.DEVICE_MODE);
+                intent.putExtra("deviceTypeString", deviceType.name());
                 startActivity(intent);
             }
         });

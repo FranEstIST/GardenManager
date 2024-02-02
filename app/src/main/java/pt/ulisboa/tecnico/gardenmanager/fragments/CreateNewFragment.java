@@ -11,9 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
@@ -21,8 +18,11 @@ import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentCreateNewBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
+import pt.ulisboa.tecnico.gardenmanager.domain.Device;
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.network.WithoutNetService;
+import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
 
 /**
@@ -34,16 +34,16 @@ public class CreateNewFragment extends Fragment {
     private static final String TAG = "CreateNewFragment";
 
     private static final String ARG_MODE = "mode";
+    private static final String ARG_DEVICE_TYPE_STRING = "deviceMode";
 
     private int mode;
+    private DeviceType deviceType;
 
     private FragmentCreateNewBinding binding;
 
     private GlobalClass globalClass;
 
     private WithoutNetService WNService;
-
-
 
     public CreateNewFragment() {
         // Required empty public constructor
@@ -61,6 +61,16 @@ public class CreateNewFragment extends Fragment {
         CreateNewFragment fragment = new CreateNewFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_MODE, mode);
+        args.putInt(ARG_DEVICE_TYPE_STRING, -1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static CreateNewFragment newInstance(int mode, String deviceTypeString) {
+        CreateNewFragment fragment = new CreateNewFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_MODE, mode);
+        args.putString(ARG_DEVICE_TYPE_STRING, deviceTypeString);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +79,7 @@ public class CreateNewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         if (getArguments() != null) {
             mode = getArguments().getInt(ARG_MODE);
+            deviceType = DeviceType.valueOf(getArguments().getString(ARG_DEVICE_TYPE_STRING));
         }
 
         globalClass = (GlobalClass) getActivity().getApplicationContext();
@@ -99,7 +110,46 @@ public class CreateNewFragment extends Fragment {
             submitButtonOnClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
+                        @Override
+                        public void onResponse(Object response) {
+                            DeviceDto deviceDto = (DeviceDto) response;
 
+                            Device newDevice = new Device(deviceDto, deviceType);
+
+                            int currentGardenId = globalClass.getCurrentGardenId();
+
+                            newDevice.setParentGardenId(currentGardenId);
+
+                            GardenDatabase gardenDatabase = globalClass.getGardenDatabase();
+
+                            gardenDatabase.deviceDao().insertAll(newDevice)
+                                    .observeOn(Schedulers.newThread())
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe(new DisposableCompletableObserver() {
+                                        @Override
+                                        public void onComplete() {
+                                            Log.d(TAG, "Added device");
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+
+                        }
+                    };
+
+                    String newDeviceName = createNewNameTextView.getText().toString();
+                    int currentGardenId = globalClass.getCurrentGardenId();
+
+                    WNService.addDevice(newDeviceName, currentGardenId, responseListener);
+                    //WNService.addDeviceToGarden(globalClass.getCurrentGardenId());
                 }
             };
         } else {

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.constants.StatusCodes;
+import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
 
 public class WithoutNetService {
@@ -109,19 +110,6 @@ public class WithoutNetService {
             return;
         }
 
-        /*StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                responseListener.onError(error.getMessage());
-            }
-        });*/
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -137,6 +125,97 @@ public class WithoutNetService {
                     try {
                         JSONObject gardenJsonObject = response.getJSONObject("network");
                         responseListener.onResponse(new GardenDto(gardenJsonObject));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
+    }
+
+    public void addDevice(String deviceName, WithoutNetServiceResponseListener responseListener) {
+        String url = ADD_NODE_URL;
+
+        JSONObject jsonRequest = new JSONObject();
+
+        try {
+            jsonRequest.put("commonName", deviceName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONObject deviceJsonObject = response.getJSONObject("device");
+                        responseListener.onResponse(new DeviceDto(deviceJsonObject));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
+    }
+
+    public void addDevice(String deviceName, int gardenId, WithoutNetServiceResponseListener responseListener) {
+        String url = ADD_NODE_URL;
+
+        JSONObject jsonRequest = new JSONObject();
+
+        try {
+            jsonRequest.put("commonName", deviceName);
+            jsonRequest.put("networkId", gardenId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONObject deviceJsonObject = response.getJSONObject("node");
+                        responseListener.onResponse(new DeviceDto(deviceJsonObject));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

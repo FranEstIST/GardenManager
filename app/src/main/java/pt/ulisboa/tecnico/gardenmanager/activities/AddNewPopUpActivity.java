@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 import pt.ulisboa.tecnico.gardenmanager.R;
+import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityAddNewPopUpBinding;
 import pt.ulisboa.tecnico.gardenmanager.fragments.AddOptionsFragment;
 import pt.ulisboa.tecnico.gardenmanager.fragments.CreateNewFragment;
@@ -18,6 +19,7 @@ public class AddNewPopUpActivity extends AppCompatActivity implements AddOptions
     public ActivityAddNewPopUpBinding binding;
     private GlobalClass globalClass;
     private int mode;
+    private String deviceTypeString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,10 @@ public class AddNewPopUpActivity extends AppCompatActivity implements AddOptions
 
         Intent receivedIntent = getIntent();
         mode = receivedIntent.getIntExtra("mode", -1);
+
+        if(mode == ViewModes.DEVICE_MODE) {
+            deviceTypeString = receivedIntent.getStringExtra("deviceTypeString");
+        }
 
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -177,7 +183,14 @@ public class AddNewPopUpActivity extends AppCompatActivity implements AddOptions
 
     @Override
     public void onCreateNewClick() {
-        Fragment createNewFragment = CreateNewFragment.newInstance(mode);
+        Fragment createNewFragment;
+
+        if(mode == ViewModes.DEVICE_MODE) {
+            createNewFragment = CreateNewFragment.newInstance(mode, deviceTypeString);
+        } else {
+            createNewFragment = CreateNewFragment.newInstance(mode);
+        }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.addNewFragmentContainerView, createNewFragment)

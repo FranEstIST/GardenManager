@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.gardenmanager.domain;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
+
 @Entity
 public class Device {
     @PrimaryKey
@@ -17,6 +19,12 @@ public class Device {
     public Device(int deviceId, String name, DeviceType deviceType) {
         this.deviceId = deviceId;
         this.name = name;
+        this.deviceType = deviceType;
+    }
+
+    public Device(DeviceDto deviceDto, DeviceType deviceType) {
+        this.deviceId = deviceDto.getId();
+        this.name = deviceDto.getCommonName();
         this.deviceType = deviceType;
     }
 
