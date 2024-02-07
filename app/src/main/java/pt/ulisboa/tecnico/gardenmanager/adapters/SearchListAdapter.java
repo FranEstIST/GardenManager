@@ -46,6 +46,16 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
         this.devices = devices;
     }
 
+    public void setFilteredDevices(List<Device> filteredDevices) {
+        this.filteredDevices = filteredDevices;
+        this.notifyDataSetChanged();
+    }
+
+    public void setFilteredGardens(List<Garden> filteredGardens) {
+        this.filteredGardens = filteredGardens;
+        this.notifyDataSetChanged();
+    }
+
     private void fillOutDeviceViewHolder(View itemView, int position) {
         Device device = filteredDevices.get(position);
 
@@ -55,7 +65,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
         TextView deviceStatusTextView = itemView.findViewById(R.id.deviceStatusTextView);
 
         deviceNameTextView.setText(device.getName());
-        deviceIdTextView.setText(device.getDeviceId());
+        deviceIdTextView.setText(device.getDeviceId() + "");
 
         if(device.getParentGardenId() == -1) {
             deviceItemView.setBackgroundResource(R.drawable.device_search_list_item_no_network_bg);

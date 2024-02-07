@@ -7,6 +7,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,12 +19,20 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.adapters.GardenListAdapter;
 import pt.ulisboa.tecnico.gardenmanager.adapters.SearchListAdapter;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivitySearchBinding;
+import pt.ulisboa.tecnico.gardenmanager.domain.Device;
+import pt.ulisboa.tecnico.gardenmanager.network.WithoutNetService;
+import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
@@ -32,8 +41,12 @@ public class SearchActivity extends AppCompatActivity {
 
     private ActivitySearchBinding binding;
     private TextView searchTextView;
+    private RecyclerView searchItemsRecyclerView;
     private SearchListAdapter searchListAdapter;
     private String searchText;
+
+    private GlobalClass globalClass;
+    private WithoutNetService WNService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +54,9 @@ public class SearchActivity extends AppCompatActivity {
 
         Intent receivedIntent = getIntent();
         mode = receivedIntent.getIntExtra("mode", -1);
+
+        globalClass = (GlobalClass) getApplication().getApplicationContext();
+        WNService = new WithoutNetService(globalClass);
 
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -66,8 +82,10 @@ public class SearchActivity extends AppCompatActivity {
         appBarTitleTextView.setText(appBarTitle);
         searchTextView.setText(searchText);
 
+        searchItemsRecyclerView = binding.searchItemsRecyclerView;
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.searchItemsRecyclerView.setLayoutManager(layoutManager);
+        searchItemsRecyclerView.setLayoutManager(layoutManager);
 
         searchListAdapter = new SearchListAdapter(mode);
 
@@ -85,18 +103,47 @@ public class SearchActivity extends AppCompatActivity {
 
     private void filterResults(String query) {
         if(query.equals("")) {
+            searchItemsRecyclerView.setVisibility(View.GONE);
             searchTextView.setVisibility(View.VISIBLE);
             searchTextView.setText(searchText);
             return;
         }
 
-        searchListAdapter.getFilter().filter(query);
+        //searchListAdapter.getFilter().filter(query);
 
-        if(searchListAdapter.getItemCount() == 0) {
-            searchTextView.setVisibility(View.VISIBLE);
-            searchTextView.setText(R.string.no_results_found);
+        if(mode == ViewModes.DEVICE_MODE) {
+            WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
+                @Override
+                public void onResponse(Object response) {
+                    List<DeviceDto> deviceDtos = (List<DeviceDto>) response;
+                    List<Device> devices = deviceDtos
+                            .stream()
+                            .map(deviceDto -> {
+                                return new Device(deviceDto);
+                            })
+                            .collect(Collectors.toList());
+
+                    searchListAdapter.setFilteredDevices(devices);
+
+                    if (searchListAdapter.getItemCount() == 0) {
+                        searchItemsRecyclerView.setVisibility(View.GONE);
+                        searchTextView.setVisibility(View.VISIBLE);
+                        searchTextView.setText(R.string.no_results_found);
+                    } else {
+                        searchItemsRecyclerView.setVisibility(View.VISIBLE);
+                        searchTextView.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    //Log.e(TAG, errorMessage);
+                }
+            };
+
+            WNService.getAllDevicesInGardenContainingSubstring(globalClass.getCurrentGardenId(), query, responseListener);
         } else {
-            searchTextView.setVisibility(View.GONE);
+            // TODO: Implement the garden filtering part
         }
     }
 

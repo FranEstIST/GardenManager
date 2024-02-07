@@ -11,6 +11,10 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Node;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.constants.StatusCodes;
@@ -25,6 +29,7 @@ public class WithoutNetService {
     private static final String GET_MESSAGES_URL = BASE_URL + "get-most-recent-messages-by-sender-and-receiver";
     private static final String GET_NETWORK_BY_ID_BASE_URL = BASE_URL + "get-network-by-id/";
     private static final String GET_NODES_WITHOUT_A_NETWORK_URL = BASE_URL + "get-nodes-without-a-network";
+    private static final String FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL = BASE_URL + "find-nodes-by-network-id-and-search-term/";
     private static final String ADD_NETWORK_URL = BASE_URL + "add-network";
     private static final String ADD_NODE_URL = BASE_URL + "add-node";
     private static final String ADD_NODE_TO_NETWORK_URL = BASE_URL + "add-node-to-network";
@@ -90,8 +95,48 @@ public class WithoutNetService {
     public void getAllGardenlessDevices() {
     }
 
-    public void getAllDevicesInGardenContainingSubstring(int gardenId, String substring) {
+    public void getAllDevicesInGardenContainingSubstring(int gardenId, String substring, WithoutNetServiceResponseListener responseListener) {
+        String url = FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL + gardenId + "/" + substring;
 
+        JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONArray deviceJsonArray = response.getJSONArray("nodes");
+                        List<DeviceDto> deviceDtos = new ArrayList<>();
+
+                        for(int i = 0; i < deviceJsonArray.length(); i++) {
+                            JSONObject deviceJson = deviceJsonArray.getJSONObject(i);
+                            DeviceDto deviceDto  = new DeviceDto(deviceJson);
+                            deviceDtos.add(deviceDto);
+                        }
+
+                        responseListener.onResponse(deviceDtos);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
     }
 
     public void getAllGardenlessDevicesContainingSubstring(String substring) {

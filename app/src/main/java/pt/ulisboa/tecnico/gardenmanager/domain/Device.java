@@ -28,6 +28,12 @@ public class Device {
         this.deviceType = deviceType;
     }
 
+    public Device(DeviceDto deviceDto) {
+        this.deviceId = deviceDto.getId();
+        this.name = deviceDto.getCommonName();
+        this.deviceType = null;
+    }
+
     public int getDeviceId() {
         return deviceId;
     }
