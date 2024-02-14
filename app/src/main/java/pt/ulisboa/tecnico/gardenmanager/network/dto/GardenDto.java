@@ -25,7 +25,7 @@ public class GardenDto {
 
         JSONArray nodeIdsJsonArray = gardenJson.getJSONArray("nodes");
         for(int i = 0; i < nodeIdsJsonArray.length(); i++) {
-            this.nodeIds.add(nodeIdsJsonArray.getInt(i));
+            this.nodeIds.add(nodeIdsJsonArray.getJSONObject(i).getInt("id"));
         }
     }
 

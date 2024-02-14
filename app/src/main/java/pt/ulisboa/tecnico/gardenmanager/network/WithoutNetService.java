@@ -30,6 +30,7 @@ public class WithoutNetService {
     private static final String GET_NETWORK_BY_ID_BASE_URL = BASE_URL + "get-network-by-id/";
     private static final String GET_NODES_WITHOUT_A_NETWORK_URL = BASE_URL + "get-nodes-without-a-network";
     private static final String FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL = BASE_URL + "find-nodes-by-network-id-and-search-term/";
+    private static final String FIND_NETWORKS_BY_SEARCH_TERM_BASE_URL = BASE_URL + "find-networks-by-search-term/";
     private static final String ADD_NETWORK_URL = BASE_URL + "add-network";
     private static final String ADD_NODE_URL = BASE_URL + "add-node";
     private static final String ADD_NODE_TO_NETWORK_URL = BASE_URL + "add-node-to-network";
@@ -121,6 +122,50 @@ public class WithoutNetService {
                         }
 
                         responseListener.onResponse(deviceDtos);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
+    }
+
+    public void getAllGardensContainingSubstring(String substring, WithoutNetServiceResponseListener responseListener) {
+        String url = FIND_NETWORKS_BY_SEARCH_TERM_BASE_URL + substring;
+
+        JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONArray gardenJsonArray = response.getJSONArray("networks");
+                        List<GardenDto> gardenDtos = new ArrayList<>();
+
+                        for(int i = 0; i < gardenJsonArray.length(); i++) {
+                            JSONObject gardenJson = gardenJsonArray.getJSONObject(i);
+                            GardenDto gardenDto = new GardenDto(gardenJson);
+                            gardenDtos.add(gardenDto);
+                        }
+
+                        responseListener.onResponse(gardenDtos);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

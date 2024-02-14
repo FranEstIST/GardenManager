@@ -75,7 +75,13 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     }
 
     private void fillOutGardenViewHolder(View itemView, int position) {
+        Garden garden = filteredGardens.get(position);
 
+        TextView gardenNameTextView = itemView.findViewById(R.id.gardenNameTextView);
+        TextView gardenIdTextView = itemView.findViewById(R.id.gardenIdTextView);
+
+        gardenNameTextView.setText(garden.getName());
+        gardenIdTextView.setText(garden.getGardenId() + "");
     }
 
     @NonNull

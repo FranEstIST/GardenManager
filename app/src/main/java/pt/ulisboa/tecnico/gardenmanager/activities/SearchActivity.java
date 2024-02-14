@@ -31,8 +31,10 @@ import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivitySearchBinding;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
+import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.network.WithoutNetService;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
+import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
@@ -90,15 +92,29 @@ public class SearchActivity extends AppCompatActivity {
         searchListAdapter = new SearchListAdapter(mode);
 
         // --------------------------------------------------------------------------
-        // First (naive) solution: Let's download the whole list of networks from
+        // First (naive) solution: Let's download the whole list of networks/nodes from
         // the WN Server, and then search this list
         // TODO: Fill out the search adapter with the list of networks/devices
         // --------------------------------------------------------------------------
-        // Second (Pro) solution: Let's query the server for a list of networks
+        // Second (pro) solution: Let's query the server for a list of networks/nodes
         // corresponding to the user input every time it changes
+        // --------------------------------------------------------------------------
+        // Third (even better) solution: Let's use the 1st solution for the nodes, since
+        // There shouldn't be too many of them, and the 2nd for the networks
         // --------------------------------------------------------------------------
 
         binding.searchItemsRecyclerView.setAdapter(searchListAdapter);
+    }
+
+    private void updateSearchListVisibility() {
+        if (searchListAdapter.getItemCount() == 0) {
+            searchItemsRecyclerView.setVisibility(View.GONE);
+            searchTextView.setVisibility(View.VISIBLE);
+            searchTextView.setText(R.string.no_results_found);
+        } else {
+            searchItemsRecyclerView.setVisibility(View.VISIBLE);
+            searchTextView.setVisibility(View.GONE);
+        }
     }
 
     private void filterResults(String query) {
@@ -125,14 +141,7 @@ public class SearchActivity extends AppCompatActivity {
 
                     searchListAdapter.setFilteredDevices(devices);
 
-                    if (searchListAdapter.getItemCount() == 0) {
-                        searchItemsRecyclerView.setVisibility(View.GONE);
-                        searchTextView.setVisibility(View.VISIBLE);
-                        searchTextView.setText(R.string.no_results_found);
-                    } else {
-                        searchItemsRecyclerView.setVisibility(View.VISIBLE);
-                        searchTextView.setVisibility(View.GONE);
-                    }
+                    updateSearchListVisibility();
                 }
 
                 @Override
@@ -144,6 +153,29 @@ public class SearchActivity extends AppCompatActivity {
             WNService.getAllDevicesInGardenContainingSubstring(globalClass.getCurrentGardenId(), query, responseListener);
         } else {
             // TODO: Implement the garden filtering part
+            WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
+                @Override
+                public void onResponse(Object response) {
+                    List<GardenDto> gardenDtos = (List<GardenDto>) response;
+                    List<Garden> gardens = gardenDtos
+                            .stream()
+                            .map(gardenDto -> {
+                                return new Garden(gardenDto);
+                            })
+                            .collect(Collectors.toList());
+
+                    searchListAdapter.setFilteredGardens(gardens);
+
+                    updateSearchListVisibility();
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    //Log.e(TAG, errorMessage);
+                }
+            };
+
+            WNService.getAllGardensContainingSubstring(query, responseListener);
         }
     }
 
