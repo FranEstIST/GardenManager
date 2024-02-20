@@ -26,12 +26,14 @@ public class Device {
         this.deviceId = deviceDto.getId();
         this.name = deviceDto.getCommonName();
         this.deviceType = deviceType;
+        this.parentGardenId = deviceDto.getGardenId();
     }
 
     public Device(DeviceDto deviceDto) {
         this.deviceId = deviceDto.getId();
         this.name = deviceDto.getCommonName();
         this.deviceType = null;
+        this.parentGardenId = deviceDto.getGardenId();
     }
 
     public int getDeviceId() {

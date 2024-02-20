@@ -39,7 +39,7 @@ public class GardenDashboardFragment extends Fragment {
 
     private FragmentGardenDashboardBinding binding;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final String TAG = "SensorsDashboardFragment";
+    private final String TAG = "GardenDashboardFragment";
     private HashMap<DeviceType, SwipeCardAdapter> swipeCardAdapterHashMap = new HashMap<>();
 
     private GlobalClass globalClass;

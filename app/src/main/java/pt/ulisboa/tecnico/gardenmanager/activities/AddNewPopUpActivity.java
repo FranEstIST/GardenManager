@@ -176,6 +176,11 @@ public class AddNewPopUpActivity extends AppCompatActivity implements AddOptions
         // This code calls the search activity directly
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("mode", mode);
+
+        if(mode == ViewModes.DEVICE_MODE) {
+            intent.putExtra("deviceTypeString", deviceTypeString);
+        }
+
         startActivity(intent);
 
         finish();

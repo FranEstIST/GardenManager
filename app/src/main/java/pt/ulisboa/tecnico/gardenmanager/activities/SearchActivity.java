@@ -36,6 +36,7 @@ import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivitySearchBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
+import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 import pt.ulisboa.tecnico.gardenmanager.network.WithoutNetService;
@@ -46,6 +47,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
 
     private int mode;
+    private String deviceTypeString;
 
     private ActivitySearchBinding binding;
     private TextView searchTextView;
@@ -62,6 +64,10 @@ public class SearchActivity extends AppCompatActivity {
 
         Intent receivedIntent = getIntent();
         mode = receivedIntent.getIntExtra("mode", -1);
+
+        if(mode == ViewModes.DEVICE_MODE) {
+            deviceTypeString = receivedIntent.getStringExtra("deviceTypeString");
+        }
 
         globalClass = (GlobalClass) getApplication().getApplicationContext();
         WNService = new WithoutNetService(globalClass);
@@ -218,7 +224,8 @@ public class SearchActivity extends AppCompatActivity {
                     List<Device> devices = deviceDtos
                             .stream()
                             .map(deviceDto -> {
-                                return new Device(deviceDto);
+                                Device device = new Device(deviceDto, DeviceType.valueOf(deviceTypeString));
+                                return device;
                             })
                             .collect(Collectors.toList());
 

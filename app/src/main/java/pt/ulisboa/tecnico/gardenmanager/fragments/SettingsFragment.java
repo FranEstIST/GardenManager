@@ -97,6 +97,7 @@ public class SettingsFragment extends Fragment {
                     @Override
                     public void run() {
                         globalClass.getGardenDatabase().clearAllTables();
+                        globalClass.setCurrentGardenId(-1);
                     }
                 }).start();
             }

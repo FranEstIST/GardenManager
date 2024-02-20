@@ -38,7 +38,7 @@ public class DeviceSwipeCardsFragment extends Fragment {
     private GlobalClass globalClass;
     private GardenDatabase gardenDatabase;
 
-    private static final String TAG = "SensorsDashboardFragment";
+    private static final String TAG = "DeviceSwipeCardsFragment";
 
     public static final int SENSOR_MODE = 0;
     public static final int ACTUATOR_MODE = 1;
