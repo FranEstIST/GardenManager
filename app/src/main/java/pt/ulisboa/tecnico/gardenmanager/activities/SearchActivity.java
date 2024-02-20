@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.gardenmanager.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
+import io.reactivex.rxjava3.observers.DisposableSingleObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.adapters.GardenListAdapter;
@@ -30,8 +34,10 @@ import pt.ulisboa.tecnico.gardenmanager.adapters.SearchListAdapter;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivitySearchBinding;
+import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
+import pt.ulisboa.tecnico.gardenmanager.domain.GardenWithDevices;
 import pt.ulisboa.tecnico.gardenmanager.network.WithoutNetService;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
@@ -63,6 +69,63 @@ public class SearchActivity extends AppCompatActivity {
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        searchItemsRecyclerView = binding.searchItemsRecyclerView;
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        searchItemsRecyclerView.setLayoutManager(layoutManager);
+
+        SearchListAdapter.SearchListItemOnClickListener searchListItemOnClickListener = new SearchListAdapter.SearchListItemOnClickListener() {
+            @Override
+            public void onClick(int clickedPosition) {
+                GardenDatabase gardenDatabase = globalClass.getGardenDatabase();
+
+                if(mode == ViewModes.DEVICE_MODE) {
+                    Device clickedDevice = searchListAdapter.getFilteredDevices().get(clickedPosition);
+
+                    gardenDatabase.deviceDao().insertAll(clickedDevice)
+                            .observeOn(Schedulers.newThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new DisposableCompletableObserver() {
+                                @Override
+                                public void onComplete() {
+                                    Log.d(TAG, "Added device");
+                                    SearchActivity.this.finish();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    e.printStackTrace();
+                                }
+                            });
+
+                    // TODO: Test this
+
+                } else {
+                    Garden clickedGarden = searchListAdapter.getFilteredGardens().get(clickedPosition);
+
+                    gardenDatabase.gardenDao().insertAll(clickedGarden)
+                            .observeOn(Schedulers.newThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new DisposableCompletableObserver() {
+                                @Override
+                                public void onComplete() {
+                                    Log.d(TAG, "Added garden");
+                                    SearchActivity.this.finish();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    e.printStackTrace();
+                                }
+                            });
+
+                    // TODO: Test this
+                }
+            }
+        };
+
+        searchListAdapter = new SearchListAdapter(mode, searchListItemOnClickListener);
+
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -73,6 +136,7 @@ public class SearchActivity extends AppCompatActivity {
         if(mode == ViewModes.DEVICE_MODE) {
             appBarTitle = getString(R.string.add_existing_device);
             searchText = getString(R.string.search_for_a_device_to_add_it);
+            //getAllDevicesInGarden();
         } else {
             appBarTitle = getString(R.string.add_existing_garden);
             searchText = getString(R.string.search_for_a_garden_to_add_it);
@@ -83,13 +147,6 @@ public class SearchActivity extends AppCompatActivity {
 
         appBarTitleTextView.setText(appBarTitle);
         searchTextView.setText(searchText);
-
-        searchItemsRecyclerView = binding.searchItemsRecyclerView;
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        searchItemsRecyclerView.setLayoutManager(layoutManager);
-
-        searchListAdapter = new SearchListAdapter(mode, globalClass);
 
         // --------------------------------------------------------------------------
         // First (naive) solution: Let's download the whole list of networks/nodes from
@@ -115,6 +172,32 @@ public class SearchActivity extends AppCompatActivity {
             searchItemsRecyclerView.setVisibility(View.VISIBLE);
             searchTextView.setVisibility(View.GONE);
         }
+    }
+
+    private void getAllDevicesInGarden() {
+        WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
+            @Override
+            public void onResponse(Object response) {
+                List<DeviceDto> deviceDtos = (List<DeviceDto>) response;
+                List<Device> devices = deviceDtos
+                        .stream()
+                        .map(deviceDto -> {
+                            return new Device(deviceDto);
+                        })
+                        .collect(Collectors.toList());
+
+                searchListAdapter.setFilteredDevices(devices);
+
+                updateSearchListVisibility();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+
+            }
+        };
+
+        WNService.getAllDevicesInGarden(globalClass.getCurrentGardenId(), responseListener);
     }
 
     private void filterResults(String query) {
@@ -152,19 +235,32 @@ public class SearchActivity extends AppCompatActivity {
 
             WNService.getAllDevicesInGardenContainingSubstring(globalClass.getCurrentGardenId(), query, responseListener);
         } else {
+            List<Garden> existingGardens = new ArrayList<>();
+
             // TODO: Implement the garden filtering part
             WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
                 @Override
                 public void onResponse(Object response) {
                     List<GardenDto> gardenDtos = (List<GardenDto>) response;
-                    List<Garden> gardens = gardenDtos
+                    List<Garden> filteredGardens = gardenDtos
                             .stream()
                             .map(gardenDto -> {
                                 return new Garden(gardenDto);
                             })
                             .collect(Collectors.toList());
 
-                    searchListAdapter.setFilteredGardens(gardens);
+                    // Remove gardens that are already in the db from the list of filtered gardens
+                    filteredGardens = filteredGardens
+                            .stream()
+                            .filter(gardenOne -> {
+                                return !(existingGardens
+                                    .stream()
+                                    .anyMatch(gardenTwo -> {
+                                        return gardenOne.getGardenId() == gardenTwo.getGardenId();
+                                    }));
+                            }).collect(Collectors.toList());
+
+                    searchListAdapter.setFilteredGardens(filteredGardens);
 
                     updateSearchListVisibility();
                 }
@@ -175,7 +271,23 @@ public class SearchActivity extends AppCompatActivity {
                 }
             };
 
-            WNService.getAllGardensContainingSubstring(query, responseListener);
+            globalClass.getGardenDatabase()
+                    .gardenDao()
+                    .getAll()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(Schedulers.io())
+                    .subscribe(new DisposableSingleObserver<List<Garden>>() {
+                        @Override
+                        public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<Garden> gardens) {
+                            existingGardens.addAll(gardens);
+                            WNService.getAllGardensContainingSubstring(query, responseListener);
+                        }
+
+                        @Override
+                        public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                            Log.d(TAG, "Error getting existing gardens.", e);
+                        }
+                    });
         }
     }
 

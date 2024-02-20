@@ -75,25 +75,93 @@ public class WithoutNetService {
         this.requestQueue.add(request);
     }
 
-    public void getAllDevicesInGarden(int gardenId) {
+    public void getAllDevicesInGarden(int gardenId, WithoutNetServiceResponseListener responseListener) {
         String url = GET_NETWORK_BY_ID_BASE_URL + gardenId;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
 
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONObject networkJson = response.getJSONObject("network");
+                        JSONArray deviceJsonArray = networkJson.getJSONArray("nodes");
+                        List<DeviceDto> deviceDtos = new ArrayList<>();
+
+                        for(int i = 0; i < deviceJsonArray.length(); i++) {
+                            JSONObject deviceJson = deviceJsonArray.getJSONObject(i);
+                            DeviceDto deviceDto  = new DeviceDto(deviceJson);
+                            deviceDtos.add(deviceDto);
+                        }
+
+                        responseListener.onResponse(deviceDtos);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
             }
         });
 
         this.requestQueue.add(request);
     }
 
-    public void getAllGardenlessDevices() {
+    public void getAllGardenlessDevices(WithoutNetServiceResponseListener responseListener) {
+        String url = GET_NODES_WITHOUT_A_NETWORK_URL;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONArray deviceJsonArray = response.getJSONArray("nodes");
+                        List<DeviceDto> deviceDtos = new ArrayList<>();
+
+                        for(int i = 0; i < deviceJsonArray.length(); i++) {
+                            JSONObject deviceJson = deviceJsonArray.getJSONObject(i);
+                            DeviceDto deviceDto  = new DeviceDto(deviceJson);
+                            deviceDtos.add(deviceDto);
+                        }
+
+                        responseListener.onResponse(deviceDtos);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
     }
 
     public void getAllDevicesInGardenContainingSubstring(int gardenId, String substring, WithoutNetServiceResponseListener responseListener) {

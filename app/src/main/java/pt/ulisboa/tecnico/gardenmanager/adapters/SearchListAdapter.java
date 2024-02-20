@@ -36,12 +36,12 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     private List<Garden> filteredGardens;
     private List<Device> filteredDevices;
 
-    private GlobalClass globalClass;
+    private SearchListItemOnClickListener searchListItemOnClickListener;
 
-    public SearchListAdapter(int mode, GlobalClass globalClass) {
+    public SearchListAdapter(int mode, SearchListItemOnClickListener searchListItemOnClickListener) {
         this.mode = mode;
 
-        this.globalClass = globalClass;
+        this.searchListItemOnClickListener = searchListItemOnClickListener;
 
         this.devices = new ArrayList<>();
         this.gardens = new ArrayList<>();
@@ -65,6 +65,14 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     public void setFilteredGardens(List<Garden> filteredGardens) {
         this.filteredGardens = filteredGardens;
         this.notifyDataSetChanged();
+    }
+
+    public List<Garden> getFilteredGardens() {
+        return filteredGardens;
+    }
+
+    public List<Device> getFilteredDevices() {
+        return filteredDevices;
     }
 
     private void fillOutDeviceViewHolder(View itemView, int position) {
@@ -186,48 +194,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
 
         @Override
         public void onClick(View v) {
-            int clickedPosition = getAdapterPosition();
-            GardenDatabase gardenDatabase = globalClass.getGardenDatabase();
-
-            if(mode == ViewModes.DEVICE_MODE) {
-                Device clickedDevice = filteredDevices.get(clickedPosition);
-
-                // TODO: Test this
-
-                gardenDatabase.deviceDao().insertAll(clickedDevice)
-                        .observeOn(Schedulers.newThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new DisposableCompletableObserver() {
-                            @Override
-                            public void onComplete() {
-                                Log.d(TAG, "Added device");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                            }
-                        });
-            } else {
-                Garden clickedGarden = filteredGardens.get(clickedPosition);
-
-                // TODO: Test this
-
-                gardenDatabase.gardenDao().insertAll(clickedGarden)
-                        .observeOn(Schedulers.newThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(new DisposableCompletableObserver() {
-                            @Override
-                            public void onComplete() {
-                                Log.d(TAG, "Added garden");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                            }
-                        });
-            }
+            searchListItemOnClickListener.onClick(getAdapterPosition());
         }
+    }
+
+    public interface SearchListItemOnClickListener {
+        public void onClick(int clickedPosition);
     }
 }
