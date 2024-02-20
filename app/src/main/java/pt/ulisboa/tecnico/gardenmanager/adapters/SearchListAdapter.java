@@ -16,12 +16,18 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import io.reactivex.rxjava3.observers.DisposableCompletableObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
+import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.Garden;
 
 public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.SearchListItemViewHolder> implements Filterable {
+    private static final String TAG = "SearchListAdapter";
+
     private int mode;
 
     private List<Garden> gardens;
@@ -30,8 +36,13 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     private List<Garden> filteredGardens;
     private List<Device> filteredDevices;
 
-    public SearchListAdapter(int mode) {
+    private GlobalClass globalClass;
+
+    public SearchListAdapter(int mode, GlobalClass globalClass) {
         this.mode = mode;
+
+        this.globalClass = globalClass;
+
         this.devices = new ArrayList<>();
         this.gardens = new ArrayList<>();
         this.filteredDevices = new ArrayList<>();
@@ -175,7 +186,48 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
 
         @Override
         public void onClick(View v) {
+            int clickedPosition = getAdapterPosition();
+            GardenDatabase gardenDatabase = globalClass.getGardenDatabase();
 
+            if(mode == ViewModes.DEVICE_MODE) {
+                Device clickedDevice = filteredDevices.get(clickedPosition);
+
+                // TODO: Test this
+
+                gardenDatabase.deviceDao().insertAll(clickedDevice)
+                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new DisposableCompletableObserver() {
+                            @Override
+                            public void onComplete() {
+                                Log.d(TAG, "Added device");
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
+            } else {
+                Garden clickedGarden = filteredGardens.get(clickedPosition);
+
+                // TODO: Test this
+
+                gardenDatabase.gardenDao().insertAll(clickedGarden)
+                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new DisposableCompletableObserver() {
+                            @Override
+                            public void onComplete() {
+                                Log.d(TAG, "Added garden");
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
+            }
         }
     }
 }

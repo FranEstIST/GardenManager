@@ -89,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         searchItemsRecyclerView.setLayoutManager(layoutManager);
 
-        searchListAdapter = new SearchListAdapter(mode);
+        searchListAdapter = new SearchListAdapter(mode, globalClass);
 
         // --------------------------------------------------------------------------
         // First (naive) solution: Let's download the whole list of networks/nodes from
