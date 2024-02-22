@@ -217,11 +217,13 @@ public class SearchActivity extends AppCompatActivity {
         //searchListAdapter.getFilter().filter(query);
 
         if(mode == ViewModes.DEVICE_MODE) {
+            List<Device> existingDevices = new ArrayList<>();
+
             WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
                 @Override
                 public void onResponse(Object response) {
                     List<DeviceDto> deviceDtos = (List<DeviceDto>) response;
-                    List<Device> devices = deviceDtos
+                    List<Device> filteredDevices = deviceDtos
                             .stream()
                             .map(deviceDto -> {
                                 Device device = new Device(deviceDto, DeviceType.valueOf(deviceTypeString));
@@ -229,7 +231,18 @@ public class SearchActivity extends AppCompatActivity {
                             })
                             .collect(Collectors.toList());
 
-                    searchListAdapter.setFilteredDevices(devices);
+                    // Remove devices that are already in the db from the list of filtered devices
+                    filteredDevices = filteredDevices
+                            .stream()
+                            .filter(deviceOne -> {
+                                return !(existingDevices
+                                        .stream()
+                                        .anyMatch(deviceTwo -> {
+                                            return deviceOne.getDeviceId() == deviceTwo.getDeviceId();
+                                        }));
+                            }).collect(Collectors.toList());
+
+                    searchListAdapter.setFilteredDevices(filteredDevices);
 
                     updateSearchListVisibility();
                 }
@@ -240,11 +253,26 @@ public class SearchActivity extends AppCompatActivity {
                 }
             };
 
-            WNService.getAllDevicesInGardenContainingSubstring(globalClass.getCurrentGardenId(), query, responseListener);
+            globalClass.getGardenDatabase()
+                    .deviceDao()
+                    .getAll()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(Schedulers.io())
+                    .subscribe(new DisposableSingleObserver<List<Device>>() {
+                        @Override
+                        public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<Device> devices) {
+                            existingDevices.addAll(devices);
+                            WNService.getAllDevicesInGardenContainingSubstring(globalClass.getCurrentGardenId(), query, responseListener);
+                        }
+
+                        @Override
+                        public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                            Log.d(TAG, "Error getting existing devices.", e);
+                        }
+                    });
         } else {
             List<Garden> existingGardens = new ArrayList<>();
 
-            // TODO: Implement the garden filtering part
             WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
                 @Override
                 public void onResponse(Object response) {
