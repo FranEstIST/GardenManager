@@ -84,6 +84,8 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
         String deviceName = deviceWithReadings.device.getName();
 
+        int deviceId = deviceWithReadings.device.getDeviceId();
+
         String valueString = "N/A";
 
         if(deviceWithReadings.readings.size() > 0) {
@@ -116,6 +118,7 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
         SwipeCardFragment swipeCardFragment = SwipeCardFragment.newInstance(this.deviceType
                 , deviceName
+                , deviceId
                 , valueString);
 
         return swipeCardFragment;

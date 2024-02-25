@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import pt.ulisboa.tecnico.gardenmanager.activities.DeviceDetailsPopUpActivity;
 import pt.ulisboa.tecnico.gardenmanager.activities.SearchActivity;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
@@ -34,12 +35,14 @@ import pt.ulisboa.tecnico.gardenmanager.activities.AddNewPopUpActivity;
 public class SwipeCardFragment extends Fragment {
     private static final String DEVICE_TYPE = "device_type";
     private static final String DEVICE_NAME = "device_name";
+    private static final String DEVICE_ID = "device_id";
     private static final String VALUE = "value";
     private static final String IS_LAST_SWIPE_CARD = "is_last_swipe_card";
 
     // TODO: Change types of parameters
     private DeviceType deviceType;
     private String deviceName;
+    private int deviceId;
     private String value;
 
     private boolean isLastSwipeCard = false;
@@ -55,11 +58,12 @@ public class SwipeCardFragment extends Fragment {
      * @return A new instance of fragment SwipeCardFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SwipeCardFragment newInstance(DeviceType deviceType, String deviceName, String value) {
+    public static SwipeCardFragment newInstance(DeviceType deviceType, String deviceName, int deviceId, String value) {
         SwipeCardFragment fragment = new SwipeCardFragment();
         Bundle args = new Bundle();
         args.putString(DEVICE_TYPE, deviceType.name());
         args.putString(DEVICE_NAME, deviceName);
+        args.putInt(DEVICE_ID, deviceId);
         args.putString(VALUE, value);
         args.putBoolean(IS_LAST_SWIPE_CARD, false);
         fragment.setArguments(args);
@@ -90,6 +94,7 @@ public class SwipeCardFragment extends Fragment {
 
             this.deviceType = DeviceType.valueOf(deviceTypeName);
             this.deviceName = getArguments().getString(DEVICE_NAME);
+            this.deviceId = getArguments().getInt(DEVICE_ID);
             this.value = getArguments().getString(VALUE);
             this.isLastSwipeCard = getArguments().getBoolean(IS_LAST_SWIPE_CARD);
         }
@@ -147,8 +152,19 @@ public class SwipeCardFragment extends Fragment {
                 swipeCardView.setCardBackgroundColor(getResources().getColor(R.color.monitor_blue));
                 break;
         }
+
         deviceNameTextView.setText(this.deviceName);
         valueTextView.setText(this.value);
+
+        regularSwipeCardLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SwipeCardFragment.this.getContext(), DeviceDetailsPopUpActivity.class);
+                intent.putExtra("deviceId", deviceId);
+                intent.putExtra("deviceCommonName", deviceName);
+                startActivity(intent);
+            }
+        });
     }
 
     private void createLastSwipeCardView(View view) {
