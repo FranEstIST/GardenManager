@@ -162,6 +162,7 @@ public class SwipeCardFragment extends Fragment {
                 Intent intent = new Intent(SwipeCardFragment.this.getContext(), DeviceDetailsPopUpActivity.class);
                 intent.putExtra("deviceId", deviceId);
                 intent.putExtra("deviceCommonName", deviceName);
+                intent.putExtra("deviceTypeString", deviceType.name());
                 startActivity(intent);
             }
         });

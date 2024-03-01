@@ -16,6 +16,9 @@ public interface ReadingDao {
     @Query("SELECT * FROM reading")
     Single<List<Reading>> getAll();
 
+    @Query("SELECT * FROM reading WHERE `sender-id` = (:senderId)")
+    Single<List<Reading>> getAllBySenderId(int senderId);
+
     @Query("SELECT * FROM reading WHERE readingId IN (:readingIds)")
     Single<List<Reading>> loadAllByIds(int[] readingIds);
 
