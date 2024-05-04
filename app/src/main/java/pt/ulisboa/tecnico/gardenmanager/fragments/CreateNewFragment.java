@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.gardenmanager.fragments;
 
+import static pt.ulisboa.tecnico.gardenmanager.constants.ViewModes.DEVICE_MODE;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -79,7 +81,9 @@ public class CreateNewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         if (getArguments() != null) {
             mode = getArguments().getInt(ARG_MODE);
-            deviceType = DeviceType.valueOf(getArguments().getString(ARG_DEVICE_TYPE_STRING));
+            if(mode == DEVICE_MODE) {
+                deviceType = DeviceType.valueOf(getArguments().getString(ARG_DEVICE_TYPE_STRING));
+            }
         }
 
         globalClass = (GlobalClass) getActivity().getApplicationContext();
@@ -103,7 +107,7 @@ public class CreateNewFragment extends Fragment {
         String submitButtonText;
         View.OnClickListener submitButtonOnClickListener;
 
-        if(mode == ViewModes.DEVICE_MODE) {
+        if(mode == DEVICE_MODE) {
             createNewTitle = getString(R.string.create_new_device);
             hint = getString(R.string.device_name);
             submitButtonText = getString(R.string.create_device);
