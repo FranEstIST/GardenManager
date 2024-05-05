@@ -22,6 +22,9 @@ import androidx.lifecycle.Observer;
 
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import pt.ulisboa.tecnico.gardenmanager.domain.Device;
+import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
+import pt.ulisboa.tecnico.gardenmanager.domain.ReadingType;
 import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.DeviceSwipeCardsViewModel;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenDashboardViewModel;
@@ -51,6 +54,8 @@ public class DeviceSwipeCardsFragment extends Fragment {
     private HashMap<DeviceType, SwipeCardAdapter> swipeCardAdapterHashMap = new HashMap<>();
 
     private int mode;
+
+    private boolean isInDemoMode = false;
 
     public static DeviceSwipeCardsFragment newInstance() {
         return new DeviceSwipeCardsFragment();
@@ -115,6 +120,128 @@ public class DeviceSwipeCardsFragment extends Fragment {
     }
 
     private void getDeviceWithReadingsByGardenAndType(int parentGardenId, DeviceType deviceType) {
+        if(isInDemoMode) {
+            SwipeCardAdapter swipeCardAdapter;
+            Device device;
+            DeviceWithReadings deviceWithReadings;
+            Reading reading;
+            ArrayList<Reading> readingList;
+            ArrayList<DeviceWithReadings> deviceWithReadingsList;
+
+            switch(deviceType) {
+                case TEMPERATURE_SENSOR:
+                    // Demo temperature sensor
+                    swipeCardAdapter = swipeCardAdapterHashMap.get(DeviceType.TEMPERATURE_SENSOR);
+
+                    device = new Device(1, "NE_Temp_1", DeviceType.TEMPERATURE_SENSOR);
+                    deviceWithReadings = new DeviceWithReadings();
+
+                    reading = new Reading(2, 24, ReadingType.CELSIUS);
+                    readingList = new ArrayList<>();
+                    readingList.add(reading);
+
+                    deviceWithReadings.device = device;
+                    deviceWithReadings.readings = readingList;
+                    deviceWithReadingsList = new ArrayList<>();
+                    deviceWithReadingsList.add(deviceWithReadings);
+
+                    swipeCardAdapter.setDevicesWithReadings(deviceWithReadingsList);
+                    break;
+                case LIGHT_SENSOR:
+                    // Demo light sensor
+                    swipeCardAdapter = swipeCardAdapterHashMap.get(DeviceType.LIGHT_SENSOR);
+
+                    device = new Device(1, "SW_Light_3", DeviceType.LIGHT_SENSOR);
+                    deviceWithReadings = new DeviceWithReadings();
+
+                    reading = new Reading(2, 80, ReadingType.PERCENTAGE);
+                    readingList = new ArrayList<>();
+                    readingList.add(reading);
+
+                    deviceWithReadings.device = device;
+                    deviceWithReadings.readings = readingList;
+                    deviceWithReadingsList = new ArrayList<>();
+                    deviceWithReadingsList.add(deviceWithReadings);
+
+                    swipeCardAdapter.setDevicesWithReadings(deviceWithReadingsList);
+                    break;
+                case HUMIDITY_SENSOR:
+                    // Demo humidity sensor
+                    swipeCardAdapter = swipeCardAdapterHashMap.get(DeviceType.HUMIDITY_SENSOR);
+
+                    device = new Device(1, "E_Hum_5", DeviceType.HUMIDITY_SENSOR);
+                    deviceWithReadings = new DeviceWithReadings();
+
+                    reading = new Reading(2, 55, ReadingType.PERCENTAGE);
+                    readingList = new ArrayList<>();
+                    readingList.add(reading);
+
+                    deviceWithReadings.device = device;
+                    deviceWithReadings.readings = readingList;
+                    deviceWithReadingsList = new ArrayList<>();
+                    deviceWithReadingsList.add(deviceWithReadings);
+
+                    swipeCardAdapter.setDevicesWithReadings(deviceWithReadingsList);
+                    break;
+                case MONITOR:
+                    // Demo monitor
+                    swipeCardAdapter = swipeCardAdapterHashMap.get(DeviceType.MONITOR);
+
+                    device = new Device(4, "Monitor_3", DeviceType.MONITOR);
+                    deviceWithReadings = new DeviceWithReadings();
+
+                    reading = new Reading(2, 1, ReadingType.STATE);
+                    readingList = new ArrayList<>();
+                    readingList.add(reading);
+
+                    deviceWithReadings.device = device;
+                    deviceWithReadings.readings = readingList;
+                    deviceWithReadingsList = new ArrayList<>();
+                    deviceWithReadingsList.add(deviceWithReadings);
+
+                    swipeCardAdapter.setDevicesWithReadings(deviceWithReadingsList);
+                    break;
+                case LAMP:
+                    // Demo lamp
+                    swipeCardAdapter = swipeCardAdapterHashMap.get(DeviceType.LAMP);
+
+                    device = new Device(4, "NW_Lamp_1", DeviceType.LAMP);
+                    deviceWithReadings = new DeviceWithReadings();
+
+                    reading = new Reading(2, 0, ReadingType.PERCENTAGE);
+                    readingList = new ArrayList<>();
+                    readingList.add(reading);
+
+                    deviceWithReadings.device = device;
+                    deviceWithReadings.readings = readingList;
+                    deviceWithReadingsList = new ArrayList<>();
+                    deviceWithReadingsList.add(deviceWithReadings);
+
+                    swipeCardAdapter.setDevicesWithReadings(deviceWithReadingsList);
+                    break;
+                case SPRINKLER:
+                    // Demo sprinkler
+                    swipeCardAdapter = swipeCardAdapterHashMap.get(DeviceType.SPRINKLER);
+
+                    device = new Device(4, "NE_Spr_2", DeviceType.SPRINKLER);
+                    deviceWithReadings = new DeviceWithReadings();
+
+                    reading = new Reading(2, 26, ReadingType.PERCENTAGE);
+                    readingList = new ArrayList<>();
+                    readingList.add(reading);
+
+                    deviceWithReadings.device = device;
+                    deviceWithReadings.readings = readingList;
+                    deviceWithReadingsList = new ArrayList<>();
+                    deviceWithReadingsList.add(deviceWithReadings);
+
+                    swipeCardAdapter.setDevicesWithReadings(deviceWithReadingsList);
+                    break;
+            }
+
+            return;
+        }
+
         this.gardenDashboardViewModel.getDevicesWithReadingsByGardenAndType(parentGardenId, deviceType)
                 .observe(getViewLifecycleOwner(), new Observer<List<DeviceWithReadings>>() {
                     @Override
