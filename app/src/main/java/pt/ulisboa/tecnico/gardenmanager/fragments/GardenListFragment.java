@@ -81,7 +81,7 @@ public class GardenListFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         binding.gardenListRecyclerView.setLayoutManager(layoutManager);
 
-        GardenListAdapter gardenListAdapter = new GardenListAdapter(this.globalClass);
+        GardenListAdapter gardenListAdapter = new GardenListAdapter(this.getActivity());
         binding.gardenListRecyclerView.setAdapter(gardenListAdapter);
 
         MainActivity mainActivity = (MainActivity) getActivity();

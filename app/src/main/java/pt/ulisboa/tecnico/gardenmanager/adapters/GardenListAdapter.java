@@ -1,9 +1,11 @@
 package pt.ulisboa.tecnico.gardenmanager.adapters;
 
+import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
@@ -22,14 +26,17 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
     public static final String TAG = "GardenListAdapter";
     private ArrayList<GardenWithDevices> gardensWithDevices;
     private GlobalClass globalClass;
+    private Activity activity;
 
-    public GardenListAdapter(GlobalClass globalClass, ArrayList<GardenWithDevices> gardensWithDevices) {
-        this.globalClass = globalClass;
+    public GardenListAdapter(Activity activity, ArrayList<GardenWithDevices> gardensWithDevices) {
+        this.activity = activity;
+        this.globalClass = (GlobalClass) activity.getApplicationContext();
         this.gardensWithDevices = gardensWithDevices;
     }
 
-    public GardenListAdapter(GlobalClass globalClass) {
-        this.globalClass = globalClass;
+    public GardenListAdapter(Activity activity) {
+        this.activity = activity;
+        this.globalClass = (GlobalClass) activity.getApplicationContext();
         this.gardensWithDevices = new ArrayList<>();
     }
 
@@ -48,7 +55,7 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
 
         int gardenId = garden.getGardenId();
 
-        if(gardenId == globalClass.getCurrentGardenId()) {
+        if (gardenId == globalClass.getCurrentGardenId()) {
             holder.gardenListItem.setBackgroundResource(R.drawable.garden_list_item_selected_bg);
         } else {
             holder.gardenListItem.setBackgroundResource(R.drawable.garden_list_item_bg);
@@ -60,7 +67,24 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
         int numberOfDevicesInGarden = devices.size();
 
         holder.gardenNameTextView.setText(gardenName);
-        holder.numberOfDevicesTextView.setText(numberOfDevicesInGarden + "");
+        holder.numberOfDevicesTextView.setText(numberOfDevicesInGarden == 1 ?
+                numberOfDevicesInGarden + " device"
+                : numberOfDevicesInGarden + " devices");
+
+        holder.removeGardenImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalClass
+                        .getGardenDatabase()
+                        .gardenDao()
+                        .delete(garden)
+                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                () -> GardenListAdapter.this.activity.runOnUiThread(
+                                        () -> GardenListAdapter.this.notifyDataSetChanged()));
+            }
+        });
     }
 
     @Override
@@ -77,12 +101,14 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
         public View gardenListItem;
         public TextView gardenNameTextView;
         public TextView numberOfDevicesTextView;
+        public ImageButton removeGardenImageButton;
 
         public GardenListItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.gardenListItem = itemView.findViewById(R.id.gardenListItem);
             this.gardenNameTextView = itemView.findViewById(R.id.gardenNameTextView);
             this.numberOfDevicesTextView = itemView.findViewById(R.id.numberOfDevicesTextView);
+            this.removeGardenImageButton = itemView.findViewById(R.id.removeGardenButton);
 
             itemView.setOnClickListener(this);
         }

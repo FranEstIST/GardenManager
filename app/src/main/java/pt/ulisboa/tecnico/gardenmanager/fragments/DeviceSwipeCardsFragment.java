@@ -55,7 +55,7 @@ public class DeviceSwipeCardsFragment extends Fragment {
 
     private int mode;
 
-    private boolean isInDemoMode = false;
+    private boolean isInDemoMode = true;
 
     public static DeviceSwipeCardsFragment newInstance() {
         return new DeviceSwipeCardsFragment();

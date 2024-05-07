@@ -159,7 +159,8 @@ public class GardenDashboardFragment extends Fragment {
                         .subscribe(new DisposableSingleObserver<Garden>() {
                             @Override
                             public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Garden garden) {
-                                appBarTitleTextView.setText(garden.getName());
+                                GardenDashboardFragment.this.getActivity().runOnUiThread(() ->
+                                        appBarTitleTextView.setText(garden.getName()));
                             }
 
                             @Override
