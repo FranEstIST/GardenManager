@@ -1,8 +1,14 @@
 package pt.ulisboa.tecnico.gardenmanager.domain;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Base64;
 
 @Entity
 public class Reading {
@@ -26,6 +32,47 @@ public class Reading {
         this.senderId = senderId;
         this.value = value;
         this.readingType = readingType;
+    }
+
+    public Reading(JSONObject jsonObject) throws JSONException, IllegalArgumentException{
+        this.senderId = jsonObject.getInt("sender");
+
+        String payload = jsonObject.getString("payload");
+        byte[] payloadByteArray = Base64.getDecoder().decode(payload);
+
+        this.value = byteArrayToIntRev(payloadByteArray);
+
+        this.timestamp = jsonObject.getInt("timestamp");
+
+        this.readingType = null;
+    }
+
+    private long byteArrayToLong(byte[] byteArray) {
+        long longValue = 0;
+        for (byte b : byteArray) {
+            longValue = (longValue << 8) + (b & 0xFF);
+        }
+        return longValue;
+    }
+
+    int byteArrayToIntRev(byte[] byteArray) {
+        int intValue = 0;
+
+        for (int i = byteArray.length - 1; i >= 0 ; i--) {
+            intValue = (intValue << 8) + (byteArray[i] & 0xFF);
+        }
+        return intValue;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Sender ID: "
+                + senderId
+                + ", Timestamp: "
+                + timestamp
+                + ", Value: "
+                + value;
     }
 
     public int getReadingId() {

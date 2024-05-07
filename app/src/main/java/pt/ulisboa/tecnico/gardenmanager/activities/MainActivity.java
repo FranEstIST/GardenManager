@@ -1,6 +1,10 @@
 package pt.ulisboa.tecnico.gardenmanager.activities;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -17,8 +21,10 @@ import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityMainBinding;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
+import pt.ulisboa.tecnico.gardenmanager.services.PollServerForMessagesService;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private AppBarConfiguration appBarConfiguration;
     public ActivityMainBinding binding;
@@ -54,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        if(!isServiceRunning(PollServerForMessagesService.class)) {
+            Log.d(TAG, "Starting polling service");
+            Intent intent = new Intent(this, PollServerForMessagesService.class);
+            startService(intent);
+        }
     }
 
     @Override
@@ -61,5 +73,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public boolean isServiceRunning(Class<?> cls){
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service: activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if(cls.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -18,6 +18,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.constants.StatusCodes;
+import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
 
@@ -27,6 +28,8 @@ public class WithoutNetService {
 
     private static final String BASE_URL = "https://192.168.1.102:8081/";
     private static final String GET_MESSAGES_URL = BASE_URL + "get-most-recent-messages-by-sender-and-receiver";
+    private static final String GET_MESSAGES_AFTER_TIMESTAMP_URL = BASE_URL + "get-most-recent-messages-by-sender-and-receiver-after-ts";
+    private static final String REMOVE_MESSAGE_URL = BASE_URL + "remove-message";
     private static final String GET_NETWORK_BY_ID_BASE_URL = BASE_URL + "get-network-by-id/";
     private static final String GET_NODES_WITHOUT_A_NETWORK_URL = BASE_URL + "get-nodes-without-a-network";
     private static final String FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL = BASE_URL + "find-nodes-by-network-id-and-search-term/";
@@ -37,7 +40,7 @@ public class WithoutNetService {
     private static final String REMOVE_NODE_FROM_NETWORK_URL = BASE_URL + "remove-node-from-network";
     private static final String DELETE_NODE_BASE_URL = BASE_URL + "delete-node/";
 
-    private static final int GARDEN_MANAGER_NODE_ID = 21342;
+    private static final int GARDEN_MANAGER_NODE_ID = 64;
 
     private static final int MAX_NUM_OF_READINGS = 20;
 
@@ -46,10 +49,10 @@ public class WithoutNetService {
         this.requestQueue = globalClass.getRequestQueue();
     }
 
-    public void getReadings(int senderId) {
-        String url = GET_MESSAGES_URL;
+    public void getReadings(int senderId, WithoutNetServiceResponseListener responseListener) {
+        String url = GET_MESSAGES_URL + "/" + senderId + "/" + GARDEN_MANAGER_NODE_ID;
 
-        JSONObject jsonRequest = new JSONObject();
+        /*JSONObject jsonRequest = new JSONObject();
 
         try {
             jsonRequest.put("senderId", senderId);
@@ -58,17 +61,48 @@ public class WithoutNetService {
         } catch (JSONException e) {
             e.printStackTrace();
             return;
-        }
+        }*/
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET ,url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
 
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONArray readingsJsonArray = response.getJSONArray("messages");
+
+                        ArrayList<Reading> receivedReadings = new ArrayList<>();
+
+                        for(int i = 0; i < readingsJsonArray.length(); i++) {
+                            Reading reading = new Reading(readingsJsonArray.getJSONObject(i));
+                            receivedReadings.add(reading);
+                        }
+
+                        responseListener.onResponse(receivedReadings);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        responseListener.onError("Error");
+                    } catch (IllegalArgumentException e1) {
+                        e1.printStackTrace();
+                        responseListener.onError("Error");
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                    responseListener.onError("Error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
             }
         });
 
@@ -497,7 +531,107 @@ public class WithoutNetService {
         this.requestQueue.add(request);
     }
 
-    // public void getReadingsAfterTimestamp(int senderId, long timestamp) { }
+    public void getReadingsAfterTimestamp(int senderId, long timestamp, WithoutNetServiceResponseListener responseListener) {
+        String url = GET_MESSAGES_AFTER_TIMESTAMP_URL;
+
+        JSONObject jsonRequest = new JSONObject();
+
+        try {
+            jsonRequest.put("senderId", senderId);
+            jsonRequest.put("timestamp", timestamp);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    try {
+                        JSONArray readingsJsonArray = response.getJSONArray("messages");
+
+                        ArrayList<Reading> receivedReadings = new ArrayList<>();
+
+                        for(int i = 0; i < readingsJsonArray.length(); i++) {
+                            Reading reading = new Reading(readingsJsonArray.getJSONObject(i));
+                            receivedReadings.add(reading);
+                        }
+
+                        responseListener.onResponse(receivedReadings);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        responseListener.onError("Error");
+                    } catch (IllegalArgumentException e1) {
+                        e1.printStackTrace();
+                        responseListener.onError("Error");
+                    }
+                } else {
+                    // TODO: Handle error status codes
+                    responseListener.onError("Error");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
+    }
+
+    public void removeReading(Reading reading, WithoutNetServiceResponseListener responseListener) {
+        String url = REMOVE_MESSAGE_URL;
+
+        JSONObject jsonRequest = new JSONObject();
+
+        try {
+            jsonRequest.put("senderId", reading.getSenderId());
+            jsonRequest.put("receiverId", GARDEN_MANAGER_NODE_ID);
+            jsonRequest.put("timestamp", reading.getTimestamp());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                int status = StatusCodes.UNKNOWN_ERROR;
+
+                try {
+                    status = response.getInt("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status == StatusCodes.OK) {
+                    responseListener.onResponse(StatusCodes.OK);
+                } else {
+                    // TODO: Handle error status codes
+                    responseListener.onError("Error");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
+    }
 
     // public void deleteDevice(int deviceId) { }
 

@@ -18,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GardenManager"
         tools:targetApi="31">
+        <service
+            android:name=".services.PollServerForMessagesService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".activities.ReadingsHistoryActivity"
             android:exported="false"
