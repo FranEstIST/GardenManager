@@ -8,17 +8,19 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gardenListRecyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
+        android:theme="@style/Theme.GardenManager.Swipeable"
         app:layout_constraintBottom_toTopOf="@+id/addNewGardenButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:theme="@style/Theme.GardenManager.Swipeable" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/noGardensAvailableTextView"
