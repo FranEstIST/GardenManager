@@ -27,18 +27,18 @@ public class WithoutNetService {
     private RequestQueue requestQueue;
 
     private static final String BASE_URL = "https://192.168.1.102:8081/";
-    private static final String GET_MESSAGES_URL = BASE_URL + "get-most-recent-messages-by-sender-and-receiver";
-    private static final String GET_MESSAGES_AFTER_TIMESTAMP_URL = BASE_URL + "get-most-recent-messages-by-sender-and-receiver-after-ts";
-    private static final String REMOVE_MESSAGE_URL = BASE_URL + "remove-message";
-    private static final String GET_NETWORK_BY_ID_BASE_URL = BASE_URL + "get-network-by-id/";
-    private static final String GET_NODES_WITHOUT_A_NETWORK_URL = BASE_URL + "get-nodes-without-a-network";
-    private static final String FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL = BASE_URL + "find-nodes-by-network-id-and-search-term/";
-    private static final String FIND_NETWORKS_BY_SEARCH_TERM_BASE_URL = BASE_URL + "find-networks-by-search-term/";
-    private static final String ADD_NETWORK_URL = BASE_URL + "add-network";
-    private static final String ADD_NODE_URL = BASE_URL + "add-node";
-    private static final String ADD_NODE_TO_NETWORK_URL = BASE_URL + "add-node-to-network";
-    private static final String REMOVE_NODE_FROM_NETWORK_URL = BASE_URL + "remove-node-from-network";
-    private static final String DELETE_NODE_BASE_URL = BASE_URL + "delete-node/";
+    private static final String GET_MESSAGES_URL_SUFFIX = "get-most-recent-messages-by-sender-and-receiver";
+    private static final String GET_MESSAGES_AFTER_TIMESTAMP_URL_SUFFIX = "get-most-recent-messages-by-sender-and-receiver-after-ts";
+    private static final String REMOVE_MESSAGE_URL_SUFFIX = "remove-message";
+    private static final String GET_NETWORK_BY_ID_BASE_URL_SUFFIX = "get-network-by-id/";
+    private static final String GET_NODES_WITHOUT_A_NETWORK_URL_SUFFIX = "get-nodes-without-a-network";
+    private static final String FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL_SUFFIX = "find-nodes-by-network-id-and-search-term/";
+    private static final String FIND_NETWORKS_BY_SEARCH_TERM_BASE_URL_SUFFIX = "find-networks-by-search-term/";
+    private static final String ADD_NETWORK_URL_SUFFIX = "add-network";
+    private static final String ADD_NODE_URL_SUFFIX = "add-node";
+    private static final String ADD_NODE_TO_NETWORK_URL_SUFFIX = "add-node-to-network";
+    private static final String REMOVE_NODE_FROM_NETWORK_URL_SUFFIX = "remove-node-from-network";
+    private static final String DELETE_NODE_BASE_URL_SUFFIX = "delete-node/";
 
     private static final int GARDEN_MANAGER_NODE_ID = 64;
 
@@ -50,7 +50,7 @@ public class WithoutNetService {
     }
 
     public void getReadings(int senderId, WithoutNetServiceResponseListener responseListener) {
-        String url = GET_MESSAGES_URL + "/" + senderId + "/" + GARDEN_MANAGER_NODE_ID;
+        String url = globalClass.getServerURL() + GET_MESSAGES_URL_SUFFIX + "/" + senderId + "/" + GARDEN_MANAGER_NODE_ID;
 
         /*JSONObject jsonRequest = new JSONObject();
 
@@ -110,7 +110,7 @@ public class WithoutNetService {
     }
 
     public void getAllDevicesInGarden(int gardenId, WithoutNetServiceResponseListener responseListener) {
-        String url = GET_NETWORK_BY_ID_BASE_URL + gardenId;
+        String url = globalClass.getServerURL() + GET_NETWORK_BY_ID_BASE_URL_SUFFIX + gardenId;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -155,7 +155,7 @@ public class WithoutNetService {
     }
 
     public void getAllGardenlessDevices(WithoutNetServiceResponseListener responseListener) {
-        String url = GET_NODES_WITHOUT_A_NETWORK_URL;
+        String url = globalClass.getServerURL() + GET_NODES_WITHOUT_A_NETWORK_URL_SUFFIX;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -199,7 +199,7 @@ public class WithoutNetService {
     }
 
     public void getAllDevicesInGardenContainingSubstring(int gardenId, String substring, WithoutNetServiceResponseListener responseListener) {
-        String url = FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL + gardenId + "/" + substring;
+        String url = globalClass.getServerURL() + FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL_SUFFIX + gardenId + "/" + substring;
 
         JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
             @Override
@@ -243,7 +243,7 @@ public class WithoutNetService {
     }
 
     public void getAllGardensContainingSubstring(String substring, WithoutNetServiceResponseListener responseListener) {
-        String url = FIND_NETWORKS_BY_SEARCH_TERM_BASE_URL + substring;
+        String url = globalClass.getServerURL() + FIND_NETWORKS_BY_SEARCH_TERM_BASE_URL_SUFFIX + substring;
 
         JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
             @Override
@@ -291,7 +291,7 @@ public class WithoutNetService {
     }
 
     public void addGarden(String gardenName, WithoutNetServiceResponseListener responseListener) {
-        String url = ADD_NETWORK_URL;
+        String url = globalClass.getServerURL() + ADD_NETWORK_URL_SUFFIX;
 
         JSONObject jsonRequest = new JSONObject();
 
@@ -336,7 +336,7 @@ public class WithoutNetService {
     }
 
     public void addDevice(String deviceName, WithoutNetServiceResponseListener responseListener) {
-        String url = ADD_NODE_URL;
+        String url = globalClass.getServerURL() + ADD_NODE_URL_SUFFIX;
 
         JSONObject jsonRequest = new JSONObject();
 
@@ -381,7 +381,7 @@ public class WithoutNetService {
     }
 
     public void addDevice(String deviceName, int gardenId, WithoutNetServiceResponseListener responseListener) {
-        String url = ADD_NODE_URL;
+        String url = globalClass.getServerURL() + ADD_NODE_URL_SUFFIX;
 
         JSONObject jsonRequest = new JSONObject();
 
@@ -429,7 +429,7 @@ public class WithoutNetService {
     public void addDeviceToGarden(String deviceName, int gardenId, WithoutNetServiceResponseListener responseListener) {
         // Step 1: Add node to the server
 
-        String url = ADD_NODE_URL;
+        String url = globalClass.getServerURL() + ADD_NODE_URL_SUFFIX;
 
         JSONObject jsonRequest = new JSONObject();
 
@@ -455,7 +455,7 @@ public class WithoutNetService {
                     return;
                 }
 
-                String url = ADD_NODE_TO_NETWORK_URL;
+                String url = globalClass.getServerURL() + ADD_NODE_TO_NETWORK_URL_SUFFIX;
 
                 JSONObject jsonRequest = new JSONObject();
 
@@ -505,7 +505,7 @@ public class WithoutNetService {
     }
 
     public void removeDeviceFromGarden(int deviceId, int gardenId) {
-        String url = REMOVE_NODE_FROM_NETWORK_URL;
+        String url = globalClass.getServerURL() + REMOVE_NODE_FROM_NETWORK_URL_SUFFIX;
 
         JSONObject jsonRequest = new JSONObject();
         try {
@@ -532,7 +532,7 @@ public class WithoutNetService {
     }
 
     public void getReadingsAfterTimestamp(int senderId, long timestamp, WithoutNetServiceResponseListener responseListener) {
-        String url = GET_MESSAGES_AFTER_TIMESTAMP_URL;
+        String url = globalClass.getServerURL() + GET_MESSAGES_AFTER_TIMESTAMP_URL_SUFFIX;
 
         JSONObject jsonRequest = new JSONObject();
 
@@ -591,7 +591,7 @@ public class WithoutNetService {
     }
 
     public void removeReading(Reading reading, WithoutNetServiceResponseListener responseListener) {
-        String url = REMOVE_MESSAGE_URL;
+        String url = globalClass.getServerURL() + REMOVE_MESSAGE_URL_SUFFIX;
 
         JSONObject jsonRequest = new JSONObject();
 

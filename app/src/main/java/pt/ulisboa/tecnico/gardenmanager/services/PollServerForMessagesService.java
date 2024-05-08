@@ -77,20 +77,20 @@ public class PollServerForMessagesService extends Service {
         Log.d(TAG, "Started polling service");
         startPollingServer();
 
-        final String CHANNELID = TAG;
+        final String CHANNEL_ID = TAG;
         NotificationChannel channel = new NotificationChannel(
-                CHANNELID,
-                CHANNELID,
+                CHANNEL_ID,
+                CHANNEL_ID,
                 NotificationManager.IMPORTANCE_LOW
         );
 
         getSystemService(NotificationManager.class).createNotificationChannel(channel);
-        Notification.Builder notification = new Notification.Builder(this, CHANNELID)
+        Notification.Builder notification = new Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle(getApplicationContext().getString(R.string.garden_manager_notification_title))
                 .setContentText(getApplicationContext().getString(R.string.garden_manager_notification_text))
                 .setSmallIcon(R.drawable.ic_notification);
 
-        startForeground(123, notification.build());
+        startForeground(1234, notification.build());
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -118,7 +118,7 @@ public class PollServerForMessagesService extends Service {
 
         pollServerTimer = new Timer("poll-server-timer");
 
-        pollServerTimer.scheduleAtFixedRate(pollServerTimerTask, 0, 5000);
+        pollServerTimer.scheduleAtFixedRate(pollServerTimerTask, 0, globalClass.getServerPollingInterval());
 
         pollServerTimerTask.run();
     }
