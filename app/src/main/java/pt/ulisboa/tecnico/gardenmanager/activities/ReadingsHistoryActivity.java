@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.gardenmanager.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,6 +85,8 @@ public class ReadingsHistoryActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         readingsListRecyclerView.setLayoutManager(layoutManager);
 
+        readingsListRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
         readingsListStatusTextView = binding.readingsListStatusTextView;
 
         binding.deleteReadingsButton.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +101,7 @@ public class ReadingsHistoryActivity extends AppCompatActivity {
                             runOnUiThread(() -> {
                                 readingsListStatusTextView.setText(R.string.no_readings_available);
                                 readingsListStatusTextView.setVisibility(View.VISIBLE);
-                                readingsListStatusTextView.setVisibility(View.GONE);
+                                readingsListRecyclerView.setVisibility(View.GONE);
                             });
                         });
             }
