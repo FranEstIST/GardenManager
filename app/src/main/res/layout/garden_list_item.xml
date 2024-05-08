@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="@string/not_available"
+        android:textColor="@color/medium_gray"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/removeGardenButton"

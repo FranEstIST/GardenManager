@@ -63,4 +63,7 @@
     <string name="most_recent">Most recent</string>
     <string name="delete_readings">Delete readings</string>
 
+    <string name="garden_manager_notification_title">Garden Manager is enabled</string>
+    <string name="garden_manager_notification_text">Garden Manager is polling the WithoutNet server for the latest messages</string>
+
 </resources>

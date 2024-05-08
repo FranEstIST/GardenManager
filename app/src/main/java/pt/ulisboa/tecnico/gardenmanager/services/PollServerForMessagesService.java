@@ -1,5 +1,8 @@
 package pt.ulisboa.tecnico.gardenmanager.services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
+import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceWithReadings;
@@ -72,6 +76,22 @@ public class PollServerForMessagesService extends Service {
         //startService(intent)
         Log.d(TAG, "Started polling service");
         startPollingServer();
+
+        final String CHANNELID = TAG;
+        NotificationChannel channel = new NotificationChannel(
+                CHANNELID,
+                CHANNELID,
+                NotificationManager.IMPORTANCE_LOW
+        );
+
+        getSystemService(NotificationManager.class).createNotificationChannel(channel);
+        Notification.Builder notification = new Notification.Builder(this, CHANNELID)
+                .setContentTitle(getApplicationContext().getString(R.string.garden_manager_notification_title))
+                .setContentText(getApplicationContext().getString(R.string.garden_manager_notification_text))
+                .setSmallIcon(R.drawable.ic_notification);
+
+        startForeground(123, notification.build());
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -121,8 +141,7 @@ public class PollServerForMessagesService extends Service {
 
         // Step 2: Get the the most recent readings from the central server
 
-        // Step 3: Send ACKs to the central server
-        //withoutNetService.getReadingsAfterTimestamp();
+        // Step 3: Remove the messages from the central server
     }
 
     private void pollServerForMessages(List<DeviceWithReadings> devicesWithReadings) {

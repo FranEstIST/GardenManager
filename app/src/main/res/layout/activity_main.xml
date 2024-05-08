@@ -6,26 +6,28 @@
     android:id="@+id/my_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity"
-    tools:ignore="HardcodedText"
+    android:fitsSystemWindows="true"
     android:outlineAmbientShadowColor="@color/black"
     android:outlineSpotShadowColor="@color/black"
-    tools:openDrawer="start"
-    android:fitsSystemWindows="true">
+    tools:context=".activities.MainActivity"
+    tools:ignore="HardcodedText"
+    tools:openDrawer="start">
 
     <include
-        layout="@layout/app_bar_main"
-        android:id="@+id/appBarMain"/>
+        android:id="@+id/appBarMain"
+        layout="@layout/app_bar_main" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:menu="@menu/side_menu" />
+        app:menu="@menu/side_menu"
+        android:background="@color/white"
+        app:itemTextColor="@color/black"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
