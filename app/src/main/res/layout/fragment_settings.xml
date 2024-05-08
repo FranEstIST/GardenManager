@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SettingsFragment">
 
-    <Button
-        android:id="@+id/clearGardensAndDevicesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/clear_gardens_and_devices"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/settingsListRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        android:theme="@style/Theme.GardenManager.Swipeable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

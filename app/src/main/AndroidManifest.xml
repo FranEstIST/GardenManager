@@ -20,10 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GardenManager"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.EditSettingPopUpActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GardenManagerPopUp" />
+
         <service
             android:name=".services.PollServerForMessagesService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activities.ReadingsHistoryActivity"
