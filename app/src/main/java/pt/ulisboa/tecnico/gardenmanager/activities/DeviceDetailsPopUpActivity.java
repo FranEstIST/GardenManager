@@ -68,6 +68,8 @@ public class DeviceDetailsPopUpActivity extends AppCompatActivity {
                 intent.putExtra("deviceTypeString", deviceType.name());
 
                 startActivity(intent);
+
+                DeviceDetailsPopUpActivity.this.finish();
             }
         });
     }

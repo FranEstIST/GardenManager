@@ -134,6 +134,7 @@ public class CreateNewFragment extends Fragment {
                                         @Override
                                         public void onComplete() {
                                             Log.d(TAG, "Added device");
+                                            CreateNewFragment.this.getActivity().finish();
                                         }
 
                                         @Override
@@ -181,6 +182,7 @@ public class CreateNewFragment extends Fragment {
                                         @Override
                                         public void onComplete() {
                                             Log.d(TAG, "Added garden");
+                                            CreateNewFragment.this.getActivity().finish();
                                         }
 
                                         @Override
