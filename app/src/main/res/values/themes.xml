@@ -49,6 +49,10 @@
 
     <style name="Theme.GardenManager.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.GardenManager.Swipeable" parent="Theme.GardenManager">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
     <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
         <item name="colorPrimary">@color/white</item>
