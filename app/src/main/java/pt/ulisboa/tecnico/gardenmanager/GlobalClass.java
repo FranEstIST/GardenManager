@@ -14,28 +14,15 @@ public class GlobalClass extends Application {
     private static final int DEFAULT_MAX_NUM_OF_READINGS = 1000;
 
     private GardenDatabase gardenDatabase;
-    private int currentGardenId;
     private RequestQueue requestQueue;
-
-    private String serverURL;
-    private int serverPollingInterval;
-    private int maxNumOfReadings;
 
     private SharedPreferences GMSharedPrefs;
 
     public GlobalClass() {
-        this.currentGardenId = -1;
-        this.serverURL = DEFAULT_SERVER_URL;
-        this.serverPollingInterval = DEFAULT_SERVER_POLLING_INTERVAL;
-        this.maxNumOfReadings = DEFAULT_MAX_NUM_OF_READINGS;
     }
 
     public GlobalClass(GardenDatabase gardenDatabase) {
         this.gardenDatabase = gardenDatabase;
-        this.currentGardenId = -1;
-        this.serverURL = DEFAULT_SERVER_URL;
-        this.serverPollingInterval = DEFAULT_SERVER_POLLING_INTERVAL;
-        this.maxNumOfReadings = DEFAULT_MAX_NUM_OF_READINGS;
     }
 
     @Override
@@ -53,11 +40,17 @@ public class GlobalClass extends Application {
     }
 
     public int getCurrentGardenId() {
-        return currentGardenId;
+        return GMSharedPrefs
+                .getInt("currentGardenId",
+                        -1);
     }
 
     public void setCurrentGardenId(int currentGardenId) {
-        this.currentGardenId = currentGardenId;
+        GMSharedPrefs
+                .edit()
+                .putInt("currentGardenId"
+                        , currentGardenId)
+                .apply();
     }
 
     public RequestQueue getRequestQueue() {
