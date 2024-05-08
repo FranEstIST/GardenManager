@@ -57,8 +57,10 @@ public class GardenListAdapter extends RecyclerView.Adapter<GardenListAdapter.Ga
 
         if (gardenId == globalClass.getCurrentGardenId()) {
             holder.gardenListItem.setBackgroundResource(R.drawable.garden_list_item_selected_bg);
+            holder.numberOfDevicesTextView.setTextColor(activity.getResources().getColor(R.color.black));
         } else {
             holder.gardenListItem.setBackgroundResource(R.drawable.garden_list_item_bg);
+            holder.numberOfDevicesTextView.setTextColor(activity.getResources().getColor(R.color.medium_gray));
         }
 
         List<Device> devices = gardenWithDevices.devices;
