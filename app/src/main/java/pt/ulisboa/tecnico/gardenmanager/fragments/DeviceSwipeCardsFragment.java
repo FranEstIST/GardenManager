@@ -252,7 +252,7 @@ public class DeviceSwipeCardsFragment extends Fragment {
                         if(swipeCardAdapter == null) {
                             Log.e(TAG, "Swipe card adapter is null");
                         } else {
-                            swipeCardAdapter.setDevicesWithReadings(new ArrayList<>(deviceWithReadings));
+                            getActivity().runOnUiThread(() -> swipeCardAdapter.setDevicesWithReadings(new ArrayList<>(deviceWithReadings)));
                         }
                     }
                 });

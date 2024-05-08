@@ -47,9 +47,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
+    <Button
+        android:id="@+id/deleteReadingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="0dp"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/delete_readings"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:typeface="serif"
+        app:cornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#000000"
+        app:strokeWidth="1dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/readingsListRecyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

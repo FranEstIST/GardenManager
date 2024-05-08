@@ -11,10 +11,14 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
+import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenDashboardViewModel;
 import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.ViewModelFactory;
 import pt.ulisboa.tecnico.gardenmanager.db.GardenDatabase;
@@ -28,12 +32,14 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
     private Context context;
 
     private ArrayList<DeviceWithReadings> devicesWithReadings;
+    private HashMap<Integer, SwipeCardFragment> swipeCardFragments;
 
     public SwipeCardAdapter(@NonNull Fragment fragment, DeviceType deviceType) {
         super(fragment);
         this.context = fragment.getContext();
         this.deviceType = deviceType;
         this.devicesWithReadings = new ArrayList<>();
+        this.swipeCardFragments = new HashMap<>();
     }
 
     public SwipeCardAdapter(@NonNull Fragment fragment, DeviceType deviceType, ArrayList<DeviceWithReadings> devicesWithReadings) {
@@ -41,6 +47,7 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
         this.context = fragment.getContext();
         this.deviceType = deviceType;
         this.devicesWithReadings = devicesWithReadings;
+        this.swipeCardFragments = new HashMap<>();
     }
 
     public SwipeCardAdapter(@NonNull Fragment fragment) {
@@ -86,12 +93,18 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
         int deviceId = deviceWithReadings.device.getDeviceId();
 
+        List<Reading> readings = deviceWithReadings.readings;
+
+        List<Reading> orderedReadings = readings.stream()
+                .sorted((readingOne, readingTwo) -> (int) (readingOne.getTimestamp() - readingTwo.getTimestamp()))
+                .collect(Collectors.toList());
+
         String valueString = "N/A";
 
         if(deviceWithReadings.readings.size() > 0) {
             // The latest reading can only be displayed if this device has any readings
 
-            long value = deviceWithReadings.readings.get(deviceWithReadings.readings.size() - 1).getValue();
+            long value = orderedReadings.get(orderedReadings.size() - 1).getValue();
 
             switch(this.deviceType) {
                 case TEMPERATURE_SENSOR:
@@ -120,6 +133,8 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
                 , deviceName
                 , deviceId
                 , valueString);
+
+        swipeCardFragments.put(position, swipeCardFragment);
 
         return swipeCardFragment;
     }
@@ -150,9 +165,60 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
         return this.devicesWithReadings.size() + 1;
     }
 
+    private String getValueString(List<Reading> readings) {
+        List<Reading> orderedReadings = readings.stream()
+                .sorted((readingOne, readingTwo) -> (int) (readingOne.getTimestamp() - readingTwo.getTimestamp()))
+                .collect(Collectors.toList());
+
+        String valueString = "N/A";
+
+        if(orderedReadings.size() > 0) {
+            // The latest reading can only be displayed if this device has any readings
+
+            long value = orderedReadings.get(orderedReadings.size() - 1).getValue();
+
+            switch(this.deviceType) {
+                case TEMPERATURE_SENSOR:
+                    valueString = value + "ºC";
+                    break;
+                case LIGHT_SENSOR:
+                case HUMIDITY_SENSOR:
+                case LAMP:
+                case SPRINKLER:
+                    valueString = value + "%";
+                    break;
+                case MONITOR:
+                    if(value == 0) {
+                        valueString = "OFF";
+                    } else {
+                        valueString = "ON";
+                    }
+                    break;
+                default:
+                    valueString = value + "";
+                    break;
+            }
+        }
+
+        return valueString;
+    }
+
+    private void updateSwipeCardFragments() {
+        for(int i = 0; i < getItemCount() - 1; i++) {
+            SwipeCardFragment swipeCardFragment = swipeCardFragments.get(i);
+
+            if(swipeCardFragment != null) {
+                DeviceWithReadings deviceWithReadings = devicesWithReadings.get(i);
+                String valueString = getValueString(deviceWithReadings.readings);
+                swipeCardFragment.setValue(valueString);
+            }
+        }
+    }
+
     public void setDevicesWithReadings(ArrayList<DeviceWithReadings> devicesWithReadings) {
         this.devicesWithReadings = devicesWithReadings;
         this.notifyDataSetChanged();
+        this.updateSwipeCardFragments();
         //this.notifyItemChanged(0);
     }
 }

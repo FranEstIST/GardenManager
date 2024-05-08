@@ -23,6 +23,8 @@ import android.widget.Toast;
 import pt.ulisboa.tecnico.gardenmanager.activities.DeviceDetailsPopUpActivity;
 import pt.ulisboa.tecnico.gardenmanager.activities.SearchActivity;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
+import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityReadingsHistoryBinding;
+import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentSwipeCardBinding;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.activities.AddNewPopUpActivity;
@@ -46,6 +48,9 @@ public class SwipeCardFragment extends Fragment {
     private String value;
 
     private boolean isLastSwipeCard = false;
+
+    private FragmentSwipeCardBinding binding;
+    private TextView valueTextView;
 
     public SwipeCardFragment() {
         // Required empty public constructor
@@ -108,7 +113,7 @@ public class SwipeCardFragment extends Fragment {
         addNewDeviceSwipeCardLayout.setVisibility(View.GONE);
 
         TextView deviceNameTextView = regularSwipeCardLayout.findViewById(R.id.deviceNameTextView);
-        TextView valueTextView = regularSwipeCardLayout.findViewById(R.id.valueTextView);
+        valueTextView = regularSwipeCardLayout.findViewById(R.id.valueTextView);
 
         // Alter the child views, in order to adjust this fragment to the specific measurement
         // type that it is used for
@@ -236,8 +241,10 @@ public class SwipeCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentSwipeCardBinding.inflate(getLayoutInflater(), container, false);
+
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_swipe_card, container, false);
+        View view = binding.getRoot();
 
         if(this.isLastSwipeCard) {
             createLastSwipeCardView(view);
@@ -246,6 +253,14 @@ public class SwipeCardFragment extends Fragment {
         }
 
         return view;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+
+        if(valueTextView != null) {
+            valueTextView.setText(value);
+        }
     }
 }
 

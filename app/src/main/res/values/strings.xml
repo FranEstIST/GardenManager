@@ -61,5 +61,6 @@
     <string name="loading_readings">Loading readings</string>
     <string name="no_readings_available">No readings available</string>
     <string name="most_recent">Most recent</string>
+    <string name="delete_readings">Delete readings</string>
 
 </resources>

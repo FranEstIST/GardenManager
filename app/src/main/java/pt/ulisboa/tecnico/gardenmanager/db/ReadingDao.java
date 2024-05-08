@@ -27,4 +27,7 @@ public interface ReadingDao {
 
     @Delete
     Completable delete(Reading reading);
+
+    @Query("DELETE FROM reading WHERE `sender-id` = (:senderId)")
+    Completable deleteReadingsBySenderId(int senderId);
 }

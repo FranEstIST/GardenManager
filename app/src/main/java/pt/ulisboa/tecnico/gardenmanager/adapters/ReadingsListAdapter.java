@@ -89,7 +89,7 @@ public class ReadingsListAdapter extends RecyclerView.Adapter<ReadingsListAdapte
 
     @Override
     public int getItemCount() {
-        return 0;
+        return readings.size();
     }
 
     class ReadingsListItemViewHolder extends RecyclerView.ViewHolder {

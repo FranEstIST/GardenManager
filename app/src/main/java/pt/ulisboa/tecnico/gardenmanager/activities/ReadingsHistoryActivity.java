@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -37,6 +38,8 @@ public class ReadingsHistoryActivity extends AppCompatActivity {
 
     private RecyclerView readingsListRecyclerView;
     private TextView readingsListStatusTextView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,24 @@ public class ReadingsHistoryActivity extends AppCompatActivity {
 
         readingsListStatusTextView = binding.readingsListStatusTextView;
 
+        binding.deleteReadingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalClass.getGardenDatabase()
+                        .readingDao()
+                        .deleteReadingsBySenderId(deviceId)
+                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(() -> {
+                            runOnUiThread(() -> {
+                                readingsListStatusTextView.setText(R.string.no_readings_available);
+                                readingsListStatusTextView.setVisibility(View.VISIBLE);
+                                readingsListStatusTextView.setVisibility(View.GONE);
+                            });
+                        });
+            }
+        });
+
         globalClass.getGardenDatabase()
                 .readingDao()
                 .getAllBySenderId(deviceId)
@@ -91,15 +112,21 @@ public class ReadingsHistoryActivity extends AppCompatActivity {
                 .subscribe(new DisposableSingleObserver<List<Reading>>() {
                     @Override
                     public void onSuccess(@NonNull List<Reading> readings) {
-                        ReadingsListAdapter readingsListAdapter = new ReadingsListAdapter(readings, deviceType);
-                        readingsListRecyclerView.setAdapter(readingsListAdapter);
+                        runOnUiThread(() -> {
+                            List<Reading> orderedReadings = readings.stream()
+                                    .sorted((readingOne, readingTwo) -> (int) (readingTwo.getTimestamp() - readingOne.getTimestamp()))
+                                    .collect(Collectors.toList());
 
-                        if(readings.size() == 0) {
-                            readingsListStatusTextView.setText(R.string.no_readings_available);
-                        } else {
-                            readingsListStatusTextView.setVisibility(View.GONE);
-                            readingsListRecyclerView.setVisibility(View.VISIBLE);
-                        }
+                            ReadingsListAdapter readingsListAdapter = new ReadingsListAdapter(orderedReadings, deviceType);
+                            readingsListRecyclerView.setAdapter(readingsListAdapter);
+
+                            if(readings.size() == 0) {
+                                readingsListStatusTextView.setText(R.string.no_readings_available);
+                            } else {
+                                readingsListStatusTextView.setVisibility(View.GONE);
+                                readingsListRecyclerView.setVisibility(View.VISIBLE);
+                            }
+                        });
                     }
 
                     @Override
