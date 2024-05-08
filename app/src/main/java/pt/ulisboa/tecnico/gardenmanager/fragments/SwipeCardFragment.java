@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.activities.DeviceDetailsPopUpActivity;
 import pt.ulisboa.tecnico.gardenmanager.activities.SearchActivity;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
@@ -35,11 +38,15 @@ import pt.ulisboa.tecnico.gardenmanager.activities.AddNewPopUpActivity;
  * create an instance of this fragment.
  */
 public class SwipeCardFragment extends Fragment {
+    private static final String TAG = "SwipeCardFragment";
+
     private static final String DEVICE_TYPE = "device_type";
     private static final String DEVICE_NAME = "device_name";
     private static final String DEVICE_ID = "device_id";
     private static final String VALUE = "value";
     private static final String IS_LAST_SWIPE_CARD = "is_last_swipe_card";
+
+    private GlobalClass globalClass;
 
     // TODO: Change types of parameters
     private DeviceType deviceType;
@@ -103,6 +110,8 @@ public class SwipeCardFragment extends Fragment {
             this.value = getArguments().getString(VALUE);
             this.isLastSwipeCard = getArguments().getBoolean(IS_LAST_SWIPE_CARD);
         }
+
+        globalClass = (GlobalClass) getActivity().getApplicationContext();
     }
 
     private void createRegularSwipeCardView(View view) {
@@ -169,6 +178,20 @@ public class SwipeCardFragment extends Fragment {
                 intent.putExtra("deviceCommonName", deviceName);
                 intent.putExtra("deviceTypeString", deviceType.name());
                 startActivity(intent);
+            }
+        });
+
+        removeDeviceImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                globalClass.getGardenDatabase()
+                        .deviceDao()
+                        .deleteById(deviceId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(Schedulers.newThread())
+                        .subscribe(() -> {
+                            Log.d(TAG, "Deleted node with ID: " + deviceId);
+                        });
             }
         });
     }

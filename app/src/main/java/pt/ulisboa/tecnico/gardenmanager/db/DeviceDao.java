@@ -43,4 +43,7 @@ public interface DeviceDao {
 
     @Delete
     Completable delete(Device device);
+
+    @Query("DELETE FROM device WHERE deviceId = (:deviceId)")
+    Completable deleteById(int deviceId);
 }
