@@ -67,6 +67,7 @@
     <string name="garden_manager_notification_text">Garden Manager is polling the WithoutNet server for the latest messages</string>
 
     <string name="server_url">Server URL</string>
+    <string name="garden_manager_id">Garden Manager ID</string>
     <string name="server_polling_interval">Server polling interval</string>
     <string name="max_number_of_readings_per_device">Max number of readings per device</string>
 

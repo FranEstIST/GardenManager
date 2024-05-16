@@ -39,9 +39,7 @@ public class WithoutNetService {
     private static final String ADD_NODE_TO_NETWORK_URL_SUFFIX = "add-node-to-network";
     private static final String REMOVE_NODE_FROM_NETWORK_URL_SUFFIX = "remove-node-from-network";
     private static final String DELETE_NODE_BASE_URL_SUFFIX = "delete-node/";
-
-    private static final int GARDEN_MANAGER_NODE_ID = 64;
-
+    
     private static final int MAX_NUM_OF_READINGS = 20;
 
     public WithoutNetService(GlobalClass globalClass) {
@@ -50,7 +48,7 @@ public class WithoutNetService {
     }
 
     public void getReadings(int senderId, WithoutNetServiceResponseListener responseListener) {
-        String url = globalClass.getServerURL() + GET_MESSAGES_URL_SUFFIX + "/" + senderId + "/" + GARDEN_MANAGER_NODE_ID;
+        String url = globalClass.getServerURL() + GET_MESSAGES_URL_SUFFIX + "/" + senderId + "/" + globalClass.getGardenManagerId();
 
         /*JSONObject jsonRequest = new JSONObject();
 
@@ -597,7 +595,7 @@ public class WithoutNetService {
 
         try {
             jsonRequest.put("senderId", reading.getSenderId());
-            jsonRequest.put("receiverId", GARDEN_MANAGER_NODE_ID);
+            jsonRequest.put("receiverId", globalClass.getGardenManagerId());
             jsonRequest.put("timestamp", reading.getTimestamp());
         } catch (JSONException e) {
             e.printStackTrace();

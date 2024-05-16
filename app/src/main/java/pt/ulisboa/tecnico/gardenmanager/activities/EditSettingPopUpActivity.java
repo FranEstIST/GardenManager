@@ -51,6 +51,15 @@ public class EditSettingPopUpActivity extends AppCompatActivity {
                         + getResources().getText(R.string.server_url));
                 binding.newSettingValueInputText.setText(globalClass.getServerURL());
                 break;
+            case GM_ID:
+                binding.changeSettingValueTextView.setText(getResources().getText(R.string.change)
+                        + " "
+                        + getResources().getText(R.string.garden_manager_id));
+                binding.newSettingValueInputText.setHint(getResources().getText(R.string.enter_new)
+                        + " "
+                        + getResources().getText(R.string.garden_manager_id));
+                binding.newSettingValueInputText.setText(globalClass.getGardenManagerId() + "");
+                break;
             case SERVER_POLLING_INTERVAL:
                 binding.changeSettingValueTextView.setText(getResources().getText(R.string.change)
                         + " "
@@ -84,6 +93,14 @@ public class EditSettingPopUpActivity extends AppCompatActivity {
                     case SERVER_URL:
                         globalClass.setServerURL(newSettingValueString);
                         break;
+                    case GM_ID:
+                        try {
+                            int newGardenManagerId = Integer.valueOf(newSettingValueString);
+                            globalClass.setGardenManagerId(newGardenManagerId);
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(EditSettingPopUpActivity.this, "Invalid id. It should be an integer.", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                     case SERVER_POLLING_INTERVAL:
                         try {
                             int newServerPollingInterval = Integer.valueOf(newSettingValueString);
@@ -112,6 +129,7 @@ public class EditSettingPopUpActivity extends AppCompatActivity {
 
     public enum SettingType {
         SERVER_URL,
+        GM_ID,
         SERVER_POLLING_INTERVAL,
         MAX_NUM_OF_READINGS
     }
