@@ -99,12 +99,13 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
                 .sorted((readingOne, readingTwo) -> (int) (readingOne.getTimestamp() - readingTwo.getTimestamp()))
                 .collect(Collectors.toList());
 
+        long value = -1;
         String valueString = "N/A";
 
         if(deviceWithReadings.readings.size() > 0) {
             // The latest reading can only be displayed if this device has any readings
 
-            long value = orderedReadings.get(orderedReadings.size() - 1).getValue();
+            value = orderedReadings.get(orderedReadings.size() - 1).getValue();
 
             switch(this.deviceType) {
                 case TEMPERATURE_SENSOR:
@@ -132,7 +133,7 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
         SwipeCardFragment swipeCardFragment = SwipeCardFragment.newInstance(this.deviceType
                 , deviceName
                 , deviceId
-                , valueString);
+                , value);
 
         swipeCardFragments.put(position, swipeCardFragment);
 
@@ -165,42 +166,12 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
         return this.devicesWithReadings.size() + 1;
     }
 
-    private String getValueString(List<Reading> readings) {
+    private long getMostRecentValue(List<Reading> readings) {
         List<Reading> orderedReadings = readings.stream()
                 .sorted((readingOne, readingTwo) -> (int) (readingOne.getTimestamp() - readingTwo.getTimestamp()))
                 .collect(Collectors.toList());
 
-        String valueString = "N/A";
-
-        if(orderedReadings.size() > 0) {
-            // The latest reading can only be displayed if this device has any readings
-
-            long value = orderedReadings.get(orderedReadings.size() - 1).getValue();
-
-            switch(this.deviceType) {
-                case TEMPERATURE_SENSOR:
-                    valueString = value + "ºC";
-                    break;
-                case LIGHT_SENSOR:
-                case HUMIDITY_SENSOR:
-                case LAMP:
-                case SPRINKLER:
-                    valueString = value + "%";
-                    break;
-                case MONITOR:
-                    if(value == 0) {
-                        valueString = "OFF";
-                    } else {
-                        valueString = "ON";
-                    }
-                    break;
-                default:
-                    valueString = value + "";
-                    break;
-            }
-        }
-
-        return valueString;
+        return orderedReadings.size() > 0 ? orderedReadings.get(orderedReadings.size() - 1).getValue() : -1;
     }
 
     private void updateSwipeCardFragments() {
@@ -209,8 +180,8 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
             if(swipeCardFragment != null) {
                 DeviceWithReadings deviceWithReadings = devicesWithReadings.get(i);
-                String valueString = getValueString(deviceWithReadings.readings);
-                swipeCardFragment.setValue(valueString);
+                long value = getMostRecentValue(deviceWithReadings.readings);
+                swipeCardFragment.setValue(value);
             }
         }
     }

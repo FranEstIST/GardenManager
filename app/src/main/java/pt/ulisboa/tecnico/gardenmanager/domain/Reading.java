@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.gardenmanager.domain;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import org.json.JSONException;
@@ -32,6 +33,13 @@ public class Reading {
         this.senderId = senderId;
         this.value = value;
         this.readingType = readingType;
+    }
+
+    @Ignore
+    public Reading(long timestamp, int senderId, long value) {
+        this.timestamp = timestamp;
+        this.senderId = senderId;
+        this.value = value;
     }
 
     public Reading(JSONObject jsonObject) throws JSONException, IllegalArgumentException{

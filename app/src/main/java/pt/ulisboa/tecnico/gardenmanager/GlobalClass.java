@@ -117,4 +117,20 @@ public class GlobalClass extends Application {
                         , gardenManagerId)
                 .apply();
     }
+
+    public int getSendCounter() {
+        int sendCounter = GMSharedPrefs
+                .getInt("sendCounter"
+                    , 0);
+
+        sendCounter++;
+
+        GMSharedPrefs
+                .edit()
+                .putInt("sendCounter"
+                        , sendCounter)
+                .apply();
+
+        return sendCounter;
+    }
 }

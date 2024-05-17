@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.gardenmanager.network;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -14,9 +16,11 @@ import org.json.JSONObject;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
+import pt.ulisboa.tecnico.gardenmanager.constants.ErrorMessages;
 import pt.ulisboa.tecnico.gardenmanager.constants.StatusCodes;
 import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
@@ -29,6 +33,7 @@ public class WithoutNetService {
     private static final String BASE_URL = "https://192.168.1.102:8081/";
     private static final String GET_MESSAGES_URL_SUFFIX = "get-most-recent-messages-by-sender-and-receiver";
     private static final String GET_MESSAGES_AFTER_TIMESTAMP_URL_SUFFIX = "get-most-recent-messages-by-sender-and-receiver-after-ts";
+    private static final String ADD_MESSAGE_URL_SUFFIX = "add-message";
     private static final String REMOVE_MESSAGE_URL_SUFFIX = "remove-message";
     private static final String GET_NETWORK_BY_ID_BASE_URL_SUFFIX = "get-network-by-id/";
     private static final String GET_NODES_WITHOUT_A_NETWORK_URL_SUFFIX = "get-nodes-without-a-network";
@@ -582,6 +587,63 @@ public class WithoutNetService {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 responseListener.onError(error.getMessage());
+            }
+        });
+
+        this.requestQueue.add(request);
+    }
+
+    private byte[] longToByteArrayRev(long value) {
+        byte[] bytes = new byte[Integer.BYTES];
+        int length = bytes.length;
+        for (int i = 0; i < length; i++) {
+            bytes[i] = (byte) (value & 0xFF);
+            value >>= 8;
+        }
+
+        return bytes;
+    }
+
+    public void sendMessage(int receiverId, long value, WithoutNetServiceResponseListener responseListener){
+        String url = globalClass.getServerURL() + ADD_MESSAGE_URL_SUFFIX;
+
+        JSONObject jsonRequest = new JSONObject();
+
+        try {
+            jsonRequest.put("length", 17);
+            jsonRequest.put("timestamp", globalClass.getSendCounter());
+            jsonRequest.put("messageType", 0);
+            jsonRequest.put("sender", globalClass.getGardenManagerId());
+            jsonRequest.put("receiver", receiverId);
+            jsonRequest.put("payload", Base64
+                    .getEncoder()
+                    .encodeToString(longToByteArrayRev(value)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            responseListener.onError(ErrorMessages.JSON_ERROR);
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    int status = response.getInt("status");
+                    if(status == StatusCodes.OK) {
+                        responseListener.onResponse(status);
+                    } else {
+                        responseListener.onError(ErrorMessages.getErrorMessage(status));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    responseListener.onError(ErrorMessages.JSON_ERROR);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                responseListener.onError(ErrorMessages.VOLLEY_ERROR);
             }
         });
 
