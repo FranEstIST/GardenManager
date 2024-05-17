@@ -17,7 +17,7 @@ import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.activities.EditSettingPopUpActivity;
 
 public class SettingsListAdapter  extends RecyclerView.Adapter<SettingsListAdapter.ViewHolder> {
-    private static final int NUM_OF_SETTINGS = 4;
+    private static final int NUM_OF_SETTINGS = 3;
 
     private Activity activity;
     private GlobalClass globalClass;
@@ -55,10 +55,6 @@ public class SettingsListAdapter  extends RecyclerView.Adapter<SettingsListAdapt
                 holder.settingNameTextView.setText(R.string.server_polling_interval);
                 holder.settingValueTextView.setText(globalClass.getServerPollingInterval() + "");
                 break;
-            case 3:
-                holder.settingNameTextView.setText(R.string.max_number_of_readings_per_device);
-                holder.settingValueTextView.setText(globalClass.getMaxNumOfReadings() + "");
-                break;
             default:
                 holder.settingNameTextView.setText(R.string.not_available);
                 break;
@@ -83,11 +79,6 @@ public class SettingsListAdapter  extends RecyclerView.Adapter<SettingsListAdapt
                     case 2:
                         intent.putExtra("setting-type"
                                 , EditSettingPopUpActivity.SettingType.SERVER_POLLING_INTERVAL);
-
-                        break;
-                    case 3:
-                        intent.putExtra("setting-type"
-                                , EditSettingPopUpActivity.SettingType.MAX_NUM_OF_READINGS);
 
                         break;
                     default:

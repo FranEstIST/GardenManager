@@ -62,20 +62,6 @@ public class GlobalClass extends Application {
         return this.requestQueue;
     }
 
-    public int getMaxNumOfReadings() {
-        return GMSharedPrefs
-                .getInt("maxNumOfReadings"
-                        , DEFAULT_MAX_NUM_OF_READINGS);
-    }
-
-    public void setMaxNumOfReadings(int maxNumOfReadings) {
-        GMSharedPrefs
-                .edit()
-                .putInt("maxNumOfReadings"
-                        , maxNumOfReadings)
-                .apply();
-    }
-
     public String getServerURL() {
         return GMSharedPrefs
                 .getString("serverURL"

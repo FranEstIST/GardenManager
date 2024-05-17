@@ -69,15 +69,6 @@ public class EditSettingPopUpActivity extends AppCompatActivity {
                         + getResources().getText(R.string.server_polling_interval));
                 binding.newSettingValueInputText.setText(globalClass.getServerPollingInterval() + "");
                 break;
-            case MAX_NUM_OF_READINGS:
-                binding.changeSettingValueTextView.setText(getResources().getText(R.string.change)
-                        + " "
-                        + getResources().getText(R.string.max_number_of_readings_per_device));
-                binding.newSettingValueInputText.setHint(getResources().getText(R.string.enter_new)
-                        + " "
-                        + getResources().getText(R.string.max_number_of_readings_per_device));
-                binding.newSettingValueInputText.setText(globalClass.getMaxNumOfReadings() + "");
-                break;
         }
 
         binding.submitButton.setOnClickListener(new View.OnClickListener() {
@@ -109,14 +100,6 @@ public class EditSettingPopUpActivity extends AppCompatActivity {
                             Toast.makeText(EditSettingPopUpActivity.this, "Invalid interval. It should be an integer.", Toast.LENGTH_SHORT).show();
                         }
                         break;
-                    case MAX_NUM_OF_READINGS:
-                        try {
-                            int newMaxNumOfReadings = Integer.valueOf(newSettingValueString);
-                            globalClass.setMaxNumOfReadings(newMaxNumOfReadings);
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(EditSettingPopUpActivity.this, "Invalid maximum number of readings. It should be an integer.", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
                 }
 
                 Intent resultIntent = new Intent();
@@ -131,7 +114,6 @@ public class EditSettingPopUpActivity extends AppCompatActivity {
         SERVER_URL,
         GM_ID,
         SERVER_POLLING_INTERVAL,
-        MAX_NUM_OF_READINGS
     }
 }
 
