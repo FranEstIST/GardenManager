@@ -1,14 +1,8 @@
 package pt.ulisboa.tecnico.gardenmanager.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -19,28 +13,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 import pt.ulisboa.tecnico.gardenmanager.activities.DeviceDetailsPopUpActivity;
-import pt.ulisboa.tecnico.gardenmanager.activities.SearchActivity;
 import pt.ulisboa.tecnico.gardenmanager.constants.ViewModes;
-import pt.ulisboa.tecnico.gardenmanager.databinding.ActivityReadingsHistoryBinding;
 import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentSwipeCardBinding;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.R;
 import pt.ulisboa.tecnico.gardenmanager.activities.AddNewPopUpActivity;
-import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SwipeCardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SwipeCardFragment extends Fragment {
     private static final String TAG = "SwipeCardFragment";
 
@@ -52,7 +34,6 @@ public class SwipeCardFragment extends Fragment {
 
     private GlobalClass globalClass;
 
-    // TODO: Change types of parameters
     private DeviceType deviceType;
     private String deviceName;
     private int deviceId;
@@ -64,7 +45,6 @@ public class SwipeCardFragment extends Fragment {
     private TextView valueTextView;
 
     public SwipeCardFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -73,7 +53,6 @@ public class SwipeCardFragment extends Fragment {
      * @param value      The value to be displayed on this fragment.
      * @return A new instance of fragment SwipeCardFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SwipeCardFragment newInstance(DeviceType deviceType, String deviceName, int deviceId, long value) {
         SwipeCardFragment fragment = new SwipeCardFragment();
         Bundle args = new Bundle();
@@ -90,7 +69,6 @@ public class SwipeCardFragment extends Fragment {
      * @param deviceType The type of the device associated with this fragment (TEMPERATURE_SENSOR, LIGHT_SENSOR, etc.).
      * @return A new instance of fragment SwipeCardFragment corresponding to the last swipe card.
      */
-    // TODO: Rename and change types and number of parameters
     public static SwipeCardFragment newLastSwipeCardInstance(DeviceType deviceType) {
         SwipeCardFragment fragment = new SwipeCardFragment();
         Bundle args = new Bundle();

@@ -76,15 +76,6 @@ public class GardenDashboardFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        /*binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(SensorsDashboardFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-            }
-        });*/
-
         setUpDashboard();
     }
 
@@ -96,7 +87,6 @@ public class GardenDashboardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //binding.framedSwipeCardOne.swipeCardViewPager.setAdapter(null);
         binding = null;
     }
 

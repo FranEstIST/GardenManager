@@ -25,9 +25,6 @@ import pt.ulisboa.tecnico.gardenmanager.databinding.FragmentAddOptionsBinding;
  * create an instance of this fragment.
  */
 public class AddOptionsFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String MODE = "mode";
 
     private int mode;
@@ -37,17 +34,8 @@ public class AddOptionsFragment extends Fragment {
     private SelectAddOptionListener selectAddOptionListener;
 
     public AddOptionsFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param mode The mode to create this fragment in (this can be either device or garden mode)
-     * @return A new instance of fragment AddOptionsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static AddOptionsFragment newInstance(int mode) {
         AddOptionsFragment fragment = new AddOptionsFragment();
         Bundle args = new Bundle();
@@ -137,21 +125,8 @@ public class AddOptionsFragment extends Fragment {
     }
 
     public interface SelectAddOptionListener {
-        public void onAddExistingClick();
-
-        public void onCreateNewClick();
-
-        public static SelectAddOptionListener getDefaultInstance() {
-            return new SelectAddOptionListener() {
-                @Override
-                public void onAddExistingClick() {
-                }
-
-                @Override
-                public void onCreateNewClick() {
-                }
-            };
-        }
+        void onAddExistingClick();
+        void onCreateNewClick();
     }
 
 }

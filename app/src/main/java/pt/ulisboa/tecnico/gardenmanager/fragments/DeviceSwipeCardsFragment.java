@@ -1,7 +1,5 @@
 package pt.ulisboa.tecnico.gardenmanager.fragments;
 
-//import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,7 +23,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import pt.ulisboa.tecnico.gardenmanager.domain.Device;
 import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
 import pt.ulisboa.tecnico.gardenmanager.domain.ReadingType;
-import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.DeviceSwipeCardsViewModel;
 import pt.ulisboa.tecnico.gardenmanager.domain.DeviceType;
 import pt.ulisboa.tecnico.gardenmanager.fragments.viewmodels.GardenDashboardViewModel;
 import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
@@ -46,7 +43,6 @@ public class DeviceSwipeCardsFragment extends Fragment {
     public static final int SENSOR_MODE = 0;
     public static final int ACTUATOR_MODE = 1;
 
-    private DeviceSwipeCardsViewModel mViewModel;
     private GardenDashboardViewModel gardenDashboardViewModel;
 
     private FragmentDeviceSwipeCardsBinding binding;
@@ -94,22 +90,12 @@ public class DeviceSwipeCardsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        /*binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(SensorsDashboardFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-            }
-        });*/
-
         setUpSwipeCards();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //binding.framedSwipeCardOne.swipeCardViewPager.setAdapter(null);
         binding = null;
     }
 
@@ -282,8 +268,6 @@ public class DeviceSwipeCardsFragment extends Fragment {
                             }
                         });
             }
-
-            //mainActivity.binding.appBarMain.appBarTitle.setText("Alameda Garden 1");
         }
     }
 
@@ -341,12 +325,4 @@ public class DeviceSwipeCardsFragment extends Fragment {
             setUpActuators(currentGardenId);
         }
     }
-
-    /*@Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(DeviceSwipeCardsViewModel.class);
-        // TODO: Use the ViewModel
-    }*/
-
 }

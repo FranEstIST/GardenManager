@@ -27,11 +27,6 @@ import pt.ulisboa.tecnico.gardenmanager.network.WithoutNetService;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.DeviceDto;
 import pt.ulisboa.tecnico.gardenmanager.network.dto.GardenDto;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreateNewFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CreateNewFragment extends Fragment {
     private static final String TAG = "CreateNewFragment";
 
@@ -48,17 +43,8 @@ public class CreateNewFragment extends Fragment {
     private WithoutNetService WNService;
 
     public CreateNewFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param mode The view mode for this fragment
-     * @return A new instance of fragment CreateNewDeviceFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CreateNewFragment newInstance(int mode) {
         CreateNewFragment fragment = new CreateNewFragment();
         Bundle args = new Bundle();
