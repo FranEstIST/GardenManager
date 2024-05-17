@@ -37,10 +37,6 @@ public class PollServerForMessagesService extends Service {
     private Timer pollServerTimer;
 
     public PollServerForMessagesService() {
-        /*globalClass = (GlobalClass) getApplicationContext();
-        gardenDatabase = globalClass.getGardenDatabase();
-        withoutNetService = new WithoutNetService(globalClass);
-        binder = new LocalBinder();*/
     }
 
     @Override
@@ -73,7 +69,6 @@ public class PollServerForMessagesService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //startService(intent)
         Log.d(TAG, "Started polling service");
         startPollingServer();
 
@@ -105,6 +100,7 @@ public class PollServerForMessagesService extends Service {
         Consumer<List<DeviceWithReadings>> onSuccessConsumer = new Consumer<List<DeviceWithReadings>>() {
             @Override
             public void accept(List<DeviceWithReadings> deviceWithReadings) throws Throwable {
+                // Step 2: Get the the most recent readings from the central server
                 pollServerForMessages(deviceWithReadings);
             }
         };
@@ -138,10 +134,6 @@ public class PollServerForMessagesService extends Service {
                 .observeOn(Schedulers.newThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(onSuccessConsumer);
-
-        // Step 2: Get the the most recent readings from the central server
-
-        // Step 3: Remove the messages from the central server
     }
 
     private void pollServerForMessages(List<DeviceWithReadings> devicesWithReadings) {
@@ -170,6 +162,7 @@ public class PollServerForMessagesService extends Service {
                     }
                 };
 
+                // Step 3: Remove the messages from the central server
                 for(Reading reading : receivedReadings) {
                     Log.d(TAG, "Received reading: " + reading);
                     withoutNetService.removeReading(reading, removeReadingResponseListener);
@@ -184,20 +177,6 @@ public class PollServerForMessagesService extends Service {
 
         for(DeviceWithReadings deviceWithReadings : devicesWithReadings) {
             int senderId = deviceWithReadings.device.getDeviceId();
-            long mostRecentMessageTimestamp = 0;
-
-            if(deviceWithReadings.readings.size() > 0) {
-                List<Reading> sortedReadings = deviceWithReadings.readings.stream()
-                        .sorted((readingOne, readingTwo) -> (int) (readingTwo.getTimestamp() - readingOne.getTimestamp()))
-                        .collect(Collectors.toList());
-                mostRecentMessageTimestamp = sortedReadings.get(0).getTimestamp();
-            }
-
-            /*Log.d(TAG, "Attempting to fetch the most recent readings for "
-                    + deviceWithReadings.device.getName()
-                    + " after timestamp "
-                    + mostRecentMessageTimestamp);*/
-
             withoutNetService.getReadings(senderId, getReadingsResponseListener);
         }
     }

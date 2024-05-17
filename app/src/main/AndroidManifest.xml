@@ -20,19 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GardenManager"
         tools:targetApi="31">
-        <activity
-            android:name=".SendMessagePopUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.EditSettingPopUpActivity"
-            android:exported="false"
-            android:theme="@style/Theme.GardenManagerPopUp" />
-
         <service
             android:name=".services.PollServerForMessagesService"
             android:enabled="true"
             android:exported="true" />
 
+        <activity
+            android:name=".activities.EditSettingPopUpActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GardenManagerPopUp" />
         <activity
             android:name=".activities.ReadingsHistoryActivity"
             android:exported="false"
@@ -54,14 +50,6 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.GardenManager.NoActionBar">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".activities.SplashScreenActivity"

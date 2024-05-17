@@ -26,13 +26,6 @@ import pt.ulisboa.tecnico.gardenmanager.domain.Reading;
         },
         version = 3,
         exportSchema = false
-        /*autoMigrations = {
-            @AutoMigration(
-                from = 1,
-                to = 2,
-                spec = GardenDatabase.AutoMigration.class
-            )
-        }*/
         )
 public abstract class GardenDatabase extends RoomDatabase {
     private static volatile GardenDatabase INSTANCE;

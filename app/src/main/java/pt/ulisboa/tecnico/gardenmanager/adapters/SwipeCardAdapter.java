@@ -100,34 +100,10 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
                 .collect(Collectors.toList());
 
         long value = -1;
-        String valueString = "N/A";
 
         if(deviceWithReadings.readings.size() > 0) {
             // The latest reading can only be displayed if this device has any readings
-
             value = orderedReadings.get(orderedReadings.size() - 1).getValue();
-
-            switch(this.deviceType) {
-                case TEMPERATURE_SENSOR:
-                    valueString = value + "ºC";
-                    break;
-                case LIGHT_SENSOR:
-                case HUMIDITY_SENSOR:
-                case LAMP:
-                case SPRINKLER:
-                    valueString = value + "%";
-                    break;
-                case MONITOR:
-                    if(value == 0) {
-                        valueString = "OFF";
-                    } else {
-                        valueString = "ON";
-                    }
-                    break;
-                default:
-                    valueString = value + "";
-                    break;
-            }
         }
 
         SwipeCardFragment swipeCardFragment = SwipeCardFragment.newInstance(this.deviceType
@@ -151,14 +127,7 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
 
     @Override
     public boolean containsItem(long itemId) {
-        // TODO: Make this method return false iff the deviceWithReadings corresponding to itemId
-        // has been changed, so that each fragment is only reloaded if necessary
-
         return itemId == -1;
-        /*|| this.devicesWithReadings
-                .stream()
-                .map(deviceWithReadings -> deviceWithReadings.device.getDeviceId())
-                .anyMatch(deviceId -> deviceId == itemId);*/
     }
 
     @Override
@@ -190,6 +159,5 @@ public class SwipeCardAdapter extends FragmentStateAdapter {
         this.devicesWithReadings = devicesWithReadings;
         this.notifyDataSetChanged();
         this.updateSwipeCardFragments();
-        //this.notifyItemChanged(0);
     }
 }

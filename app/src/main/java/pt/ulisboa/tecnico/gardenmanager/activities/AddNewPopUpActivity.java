@@ -17,7 +17,6 @@ import pt.ulisboa.tecnico.gardenmanager.GlobalClass;
 public class AddNewPopUpActivity extends AppCompatActivity implements AddOptionsFragment.SelectAddOptionListener {
     public static final String TAG = "AddNewDevicePopUpActivity";
     public ActivityAddNewPopUpBinding binding;
-    private GlobalClass globalClass;
     private int mode;
     private String deviceTypeString;
 

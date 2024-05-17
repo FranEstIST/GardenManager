@@ -1,19 +1,14 @@
 package pt.ulisboa.tecnico.gardenmanager.network;
 
-import android.util.Log;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -30,22 +25,14 @@ public class WithoutNetService {
     private GlobalClass globalClass;
     private RequestQueue requestQueue;
 
-    private static final String BASE_URL = "https://192.168.1.102:8081/";
     private static final String GET_MESSAGES_URL_SUFFIX = "get-most-recent-messages-by-sender-and-receiver";
-    private static final String GET_MESSAGES_AFTER_TIMESTAMP_URL_SUFFIX = "get-most-recent-messages-by-sender-and-receiver-after-ts";
     private static final String ADD_MESSAGE_URL_SUFFIX = "add-message";
     private static final String REMOVE_MESSAGE_URL_SUFFIX = "remove-message";
     private static final String GET_NETWORK_BY_ID_BASE_URL_SUFFIX = "get-network-by-id/";
-    private static final String GET_NODES_WITHOUT_A_NETWORK_URL_SUFFIX = "get-nodes-without-a-network";
     private static final String FIND_NODES_BY_NETWORK_ID_AND_SEARCH_TERM_BASE_URL_SUFFIX = "find-nodes-by-network-id-and-search-term/";
     private static final String FIND_NETWORKS_BY_SEARCH_TERM_BASE_URL_SUFFIX = "find-networks-by-search-term/";
     private static final String ADD_NETWORK_URL_SUFFIX = "add-network";
     private static final String ADD_NODE_URL_SUFFIX = "add-node";
-    private static final String ADD_NODE_TO_NETWORK_URL_SUFFIX = "add-node-to-network";
-    private static final String REMOVE_NODE_FROM_NETWORK_URL_SUFFIX = "remove-node-from-network";
-    private static final String DELETE_NODE_BASE_URL_SUFFIX = "delete-node/";
-    
-    private static final int MAX_NUM_OF_READINGS = 20;
 
     public WithoutNetService(GlobalClass globalClass) {
         this.globalClass = globalClass;
@@ -54,17 +41,6 @@ public class WithoutNetService {
 
     public void getReadings(int senderId, WithoutNetServiceResponseListener responseListener) {
         String url = globalClass.getServerURL() + GET_MESSAGES_URL_SUFFIX + "/" + senderId + "/" + globalClass.getGardenManagerId();
-
-        /*JSONObject jsonRequest = new JSONObject();
-
-        try {
-            jsonRequest.put("senderId", senderId);
-            jsonRequest.put("receiverId", GARDEN_MANAGER_NODE_ID);
-            jsonRequest.put("maxNumOfMessages", MAX_NUM_OF_READINGS);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }*/
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET ,url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -130,50 +106,6 @@ public class WithoutNetService {
                     try {
                         JSONObject networkJson = response.getJSONObject("network");
                         JSONArray deviceJsonArray = networkJson.getJSONArray("nodes");
-                        List<DeviceDto> deviceDtos = new ArrayList<>();
-
-                        for(int i = 0; i < deviceJsonArray.length(); i++) {
-                            JSONObject deviceJson = deviceJsonArray.getJSONObject(i);
-                            DeviceDto deviceDto  = new DeviceDto(deviceJson);
-                            deviceDtos.add(deviceDto);
-                        }
-
-                        responseListener.onResponse(deviceDtos);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // TODO: Handle error status codes
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                responseListener.onError(error.getMessage());
-            }
-        });
-
-        this.requestQueue.add(request);
-    }
-
-    public void getAllGardenlessDevices(WithoutNetServiceResponseListener responseListener) {
-        String url = globalClass.getServerURL() + GET_NODES_WITHOUT_A_NETWORK_URL_SUFFIX;
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                int status = StatusCodes.UNKNOWN_ERROR;
-
-                try {
-                    status = response.getInt("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                if(status == StatusCodes.OK) {
-                    try {
-                        JSONArray deviceJsonArray = response.getJSONArray("nodes");
                         List<DeviceDto> deviceDtos = new ArrayList<>();
 
                         for(int i = 0; i < deviceJsonArray.length(); i++) {
@@ -289,10 +221,6 @@ public class WithoutNetService {
         this.requestQueue.add(request);
     }
 
-    public void getAllGardenlessDevicesContainingSubstring(String substring) {
-
-    }
-
     public void addGarden(String gardenName, WithoutNetServiceResponseListener responseListener) {
         String url = globalClass.getServerURL() + ADD_NETWORK_URL_SUFFIX;
 
@@ -320,51 +248,6 @@ public class WithoutNetService {
                     try {
                         JSONObject gardenJsonObject = response.getJSONObject("network");
                         responseListener.onResponse(new GardenDto(gardenJsonObject));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // TODO: Handle error status codes
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                responseListener.onError(error.getMessage());
-            }
-        });
-
-        this.requestQueue.add(request);
-    }
-
-    public void addDevice(String deviceName, WithoutNetServiceResponseListener responseListener) {
-        String url = globalClass.getServerURL() + ADD_NODE_URL_SUFFIX;
-
-        JSONObject jsonRequest = new JSONObject();
-
-        try {
-            jsonRequest.put("commonName", deviceName);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                int status = StatusCodes.UNKNOWN_ERROR;
-
-                try {
-                    status = response.getInt("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                if(status == StatusCodes.OK) {
-                    try {
-                        JSONObject deviceJsonObject = response.getJSONObject("device");
-                        responseListener.onResponse(new DeviceDto(deviceJsonObject));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -416,170 +299,6 @@ public class WithoutNetService {
                     }
                 } else {
                     // TODO: Handle error status codes
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                responseListener.onError(error.getMessage());
-            }
-        });
-
-        this.requestQueue.add(request);
-    }
-
-    public void addDeviceToGarden(String deviceName, int gardenId, WithoutNetServiceResponseListener responseListener) {
-        // Step 1: Add node to the server
-
-        String url = globalClass.getServerURL() + ADD_NODE_URL_SUFFIX;
-
-        JSONObject jsonRequest = new JSONObject();
-
-        try {
-            jsonRequest.put("commonName", deviceName);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                // Step 2: Add node to the network
-                JSONObject nodeJson = null;
-                int nodeId = 0;
-
-                try {
-                    nodeJson = response.getJSONObject("node");
-                    nodeId = nodeJson.getInt("id");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                String url = globalClass.getServerURL() + ADD_NODE_TO_NETWORK_URL_SUFFIX;
-
-                JSONObject jsonRequest = new JSONObject();
-
-                try {
-                    jsonRequest.put("nodeId", nodeId);
-                    jsonRequest.put("gardenId", gardenId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        int status = StatusCodes.UNKNOWN_ERROR;
-
-                        try {
-                            status = response.getInt("status");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        if(status == StatusCodes.OK) {
-                            responseListener.onResponse(response);
-                        } else {
-                            // TODO: Handle error status codes
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        responseListener.onError(error.getMessage());
-                    }
-                });
-
-                requestQueue.add(request);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        this.requestQueue.add(request);
-    }
-
-    public void removeDeviceFromGarden(int deviceId, int gardenId) {
-        String url = globalClass.getServerURL() + REMOVE_NODE_FROM_NETWORK_URL_SUFFIX;
-
-        JSONObject jsonRequest = new JSONObject();
-        try {
-            jsonRequest.put("nodeId", deviceId);
-            jsonRequest.put("networkId", gardenId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        this.requestQueue.add(request);
-    }
-
-    public void getReadingsAfterTimestamp(int senderId, long timestamp, WithoutNetServiceResponseListener responseListener) {
-        String url = globalClass.getServerURL() + GET_MESSAGES_AFTER_TIMESTAMP_URL_SUFFIX;
-
-        JSONObject jsonRequest = new JSONObject();
-
-        try {
-            jsonRequest.put("senderId", senderId);
-            jsonRequest.put("timestamp", timestamp);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST ,url, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                int status = StatusCodes.UNKNOWN_ERROR;
-
-                try {
-                    status = response.getInt("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                if(status == StatusCodes.OK) {
-                    try {
-                        JSONArray readingsJsonArray = response.getJSONArray("messages");
-
-                        ArrayList<Reading> receivedReadings = new ArrayList<>();
-
-                        for(int i = 0; i < readingsJsonArray.length(); i++) {
-                            Reading reading = new Reading(readingsJsonArray.getJSONObject(i));
-                            receivedReadings.add(reading);
-                        }
-
-                        responseListener.onResponse(receivedReadings);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        responseListener.onError("Error");
-                    } catch (IllegalArgumentException e1) {
-                        e1.printStackTrace();
-                        responseListener.onError("Error");
-                    }
-                } else {
-                    // TODO: Handle error status codes
-                    responseListener.onError("Error");
                 }
             }
         }, new Response.ErrorListener() {
@@ -693,12 +412,8 @@ public class WithoutNetService {
         this.requestQueue.add(request);
     }
 
-    // public void deleteDevice(int deviceId) { }
-
-    // public void getDeviceReadings(int deviceId) { }
-
     public interface WithoutNetServiceResponseListener {
-        public void onResponse(Object response);
-        public void onError(String errorMessage);
+        void onResponse(Object response);
+        void onError(String errorMessage);
     }
 }

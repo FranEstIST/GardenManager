@@ -154,18 +154,6 @@ public class SearchActivity extends AppCompatActivity {
         appBarTitleTextView.setText(appBarTitle);
         searchTextView.setText(searchText);
 
-        // --------------------------------------------------------------------------
-        // First (naive) solution: Let's download the whole list of networks/nodes from
-        // the WN Server, and then search this list
-        // TODO: Fill out the search adapter with the list of networks/devices
-        // --------------------------------------------------------------------------
-        // Second (pro) solution: Let's query the server for a list of networks/nodes
-        // corresponding to the user input every time it changes
-        // --------------------------------------------------------------------------
-        // Third (even better) solution: Let's use the 1st solution for the nodes, since
-        // There shouldn't be too many of them, and the 2nd for the networks
-        // --------------------------------------------------------------------------
-
         binding.searchItemsRecyclerView.setAdapter(searchListAdapter);
     }
 
@@ -180,32 +168,6 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    private void getAllDevicesInGarden() {
-        WithoutNetService.WithoutNetServiceResponseListener responseListener = new WithoutNetService.WithoutNetServiceResponseListener() {
-            @Override
-            public void onResponse(Object response) {
-                List<DeviceDto> deviceDtos = (List<DeviceDto>) response;
-                List<Device> devices = deviceDtos
-                        .stream()
-                        .map(deviceDto -> {
-                            return new Device(deviceDto);
-                        })
-                        .collect(Collectors.toList());
-
-                searchListAdapter.setFilteredDevices(devices);
-
-                updateSearchListVisibility();
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-
-            }
-        };
-
-        WNService.getAllDevicesInGarden(globalClass.getCurrentGardenId(), responseListener);
-    }
-
     private void filterResults(String query) {
         if(query.equals("")) {
             searchItemsRecyclerView.setVisibility(View.GONE);
@@ -213,8 +175,6 @@ public class SearchActivity extends AppCompatActivity {
             searchTextView.setText(searchText);
             return;
         }
-
-        //searchListAdapter.getFilter().filter(query);
 
         if(mode == ViewModes.DEVICE_MODE) {
             List<Device> existingDevices = new ArrayList<>();
@@ -357,7 +317,6 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Toast.makeText(SearchActivity.this.getBaseContext(), "Entered: " + newText, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Entered: " + newText);
                 filterResults(newText);
                 return true;
@@ -369,8 +328,7 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) // Press Back Icon
-        {
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
