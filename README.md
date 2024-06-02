@@ -12,4 +12,4 @@ Once the Garden Manager project is open in Android Studio, connect your phone to
 
 Once your phone is connected and USB debugging is active, select your device at the top of Android Studio add press the run button.
 
-It's important to note that in order for Garden Manager ot communicate with the Central Server, it's current URL and port be set in the settings.
+It's important to note that in order for Garden Manager to communicate with the Central Server, it's current URL and port be set in the settings.
